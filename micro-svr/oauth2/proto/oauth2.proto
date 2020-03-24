@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package micro.service.oauth2;
+
+option go_package = "proto";
+
+message AccessTokenReq {
+
+}
+
+message AccessTokenReply {
+
+}
+
+message UserReq {
+
+}
+
+message UserReply {
+
+}
+
+message UserOpenIDReq {
+
+}
+
+message UserOpenIDReply {
+
+}
+
+service Oauth2 {
+    rpc AccessToken (AccessTokenReq) returns (AccessTokenReply) {
+    }
+    rpc User (UserReq) returns (UserReply) {
+    }
+    rpc UserOpenID (UserOpenIDReq) returns (UserOpenIDReply) {
+    }
+}
+
+// protoc --proto_path=. --micro_out=proto . --go_out=proto . oauth2.proto
