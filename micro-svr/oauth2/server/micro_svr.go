@@ -2,8 +2,8 @@ package server
 
 import (
 	"chick/micro-svr/oauth2/conf"
-	"chick/micro-svr/oauth2/proto"
 	"chick/micro-svr/oauth2/service"
+	"chick/proto/oauth2"
 
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/registry"
@@ -21,7 +21,7 @@ func Init(c *conf.Config, svr *service.Service) {
 		micro.Version("latest"),
 	)
 
-	proto.RegisterOauth2Handler(s.Server(), svr)
+	oauth2.RegisterOauth2Handler(s.Server(), svr)
 
 	go func() {
 		if err := s.Run(); err != nil {

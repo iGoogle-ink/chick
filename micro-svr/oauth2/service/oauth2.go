@@ -3,20 +3,20 @@ package service
 import (
 	"context"
 
-	"chick/micro-svr/oauth2/proto"
+	"chick/proto/oauth2"
 )
 
-func (s *Service) AccessToken(ctx context.Context, in *proto.AccessTokenReq, reply *proto.AccessTokenReply) (err error) {
+func (s *Service) AccessToken(ctx context.Context, in *oauth2.AccessTokenReq, reply *oauth2.AccessTokenReply) (err error) {
 
 	return nil
 }
 
-func (s *Service) User(ctx context.Context, in *proto.UserReq, reply *proto.UserReply) (err error) {
+func (s *Service) User(ctx context.Context, in *oauth2.UserReq, reply *oauth2.UserReply) (err error) {
 
 	return nil
 }
 
-func (s *Service) UserOpenID(ctx context.Context, in *proto.UserOpenIDReq, reply *proto.UserOpenIDReply) (err error) {
+func (s *Service) UserOpenID(ctx context.Context, in *oauth2.UserOpenIDReq, reply *oauth2.UserOpenIDReply) (err error) {
 
 	return nil
 }

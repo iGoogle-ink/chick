@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package micro.service.oauth2;
 
-option go_package = "proto";
+option go_package = "oauth2";
 
 message AccessTokenReq {
 
