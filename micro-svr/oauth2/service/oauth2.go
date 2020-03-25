@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"chick/proto/oauth2"
+	"chick/api/oauth2"
 )
 
 func (s *Service) AccessToken(ctx context.Context, in *oauth2.AccessTokenReq, reply *oauth2.AccessTokenReply) (err error) {

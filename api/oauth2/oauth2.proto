@@ -37,4 +37,4 @@ service Oauth2 {
     }
 }
 
-// protoc --proto_path=. --micro_out=proto . --go_out=proto . oauth2.proto
+// protoc --proto_path=. --micro_out=. --go_out=. oauth2.proto

@@ -9,7 +9,7 @@ type Redis struct {
 	DB       int
 }
 
-func InitRedis(c *Redis) (r *redis.ClusterClient) {
+func InitRedisCluster(c *Redis) (r *redis.ClusterClient) {
 	r = redis.NewClusterClient(&redis.ClusterOptions{
 		Addrs:    c.Addr,
 		Password: c.Password,

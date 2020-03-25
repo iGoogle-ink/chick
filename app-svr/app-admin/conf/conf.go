@@ -15,10 +15,11 @@ var (
 )
 
 type Config struct {
+	Name  string
+	Port  string
 	Addrs []string
 	MySQL *orm.MySQL
 	Redis *orm.Redis
-	Name  string
 }
 
 func init() {

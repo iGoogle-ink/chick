@@ -1,0 +1,44 @@
+{
+  "prod": {
+    "Name": "app.service.admin",
+    "Port": ":2233",
+    "Redis": {
+      "Addr": "120.0.0.1:1001",
+      "Password": "",
+      "DB": 0
+    },
+    "MySQL": {
+      "DSN": "root:root@tcp(127.0.0.1:3306)/test?timeout=2s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4",
+      "Active": 10,
+      "Idle": 10,
+      "IdleTimeout": "5s",
+      "ShowSQL": false
+    },
+    "NSQ": {
+      "Topic": "topic",
+      "Channel": "channel"
+    }
+  },
+  "test": {
+    "Name": "app.service.admin",
+    "Port": ":2233",
+    "Redis": {
+      "Addrs": [
+        "120.0.0.1:1001"
+      ],
+      "Password": "",
+      "DB": 0
+    },
+    "MySQL": {
+      "DSN": "root:root@tcp(127.0.0.1:3306)/test?timeout=2s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4",
+      "Active": 10,
+      "Idle": 10,
+      "IdleTimeout": "5s",
+      "ShowSQL": false
+    },
+    "NSQ": {
+      "Topic": "test_topic",
+      "Channel": "test_channel"
+    }
+  }
+}

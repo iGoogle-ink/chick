@@ -1,9 +1,9 @@
 package server
 
 import (
+	"chick/api/oauth2"
 	"chick/micro-svr/oauth2/conf"
 	"chick/micro-svr/oauth2/service"
-	"chick/proto/oauth2"
 
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/registry"
