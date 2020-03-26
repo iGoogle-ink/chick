@@ -7,9 +7,9 @@ import (
 	"syscall"
 	"time"
 
-	"chick/app-svr/app-admin/conf"
-	"chick/app-svr/app-admin/router"
-	"chick/app-svr/app-admin/service"
+	"chick/app/web-svr/admin/conf"
+	"chick/app/web-svr/admin/router"
+	"chick/app/web-svr/admin/service"
 )
 
 func main() {

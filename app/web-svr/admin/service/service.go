@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
-	"chick/app-svr/app-admin/conf"
-	"chick/app-svr/app-admin/dao"
+	"chick/app/web-svr/admin/conf"
+	"chick/app/web-svr/admin/dao"
 	"chick/pkg/http"
 
 	"github.com/gin-gonic/gin"

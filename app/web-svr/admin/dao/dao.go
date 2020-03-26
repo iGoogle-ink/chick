@@ -2,7 +2,7 @@ package dao
 
 import (
 	"chick/api/oauth2"
-	"chick/app-svr/app-admin/conf"
+	"chick/app/web-svr/admin/conf"
 	"chick/pkg/orm"
 
 	"github.com/jinzhu/gorm"

@@ -3,7 +3,7 @@ package dao
 import (
 	"context"
 
-	"chick/app-svr/app-admin/model"
+	"chick/app/web-svr/admin/model"
 )
 
 func (d *Dao) UserInfo(ctx context.Context, id int) (user *model.MxUser, err error) {

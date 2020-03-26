@@ -1,7 +1,7 @@
 package service
 
 import (
-	"chick/app-svr/app-admin/model"
+	"chick/app/web-svr/admin/model"
 )
 
 // Login login

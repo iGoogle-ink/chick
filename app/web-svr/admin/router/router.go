@@ -3,8 +3,8 @@ package router
 import (
 	"net/http"
 
-	"chick/app-svr/app-admin/conf"
-	"chick/app-svr/app-admin/service"
+	"chick/app/web-svr/admin/conf"
+	"chick/app/web-svr/admin/service"
 	xhttp "chick/pkg/http"
 
 	"github.com/gin-gonic/gin"
