@@ -21,7 +21,7 @@ func Init(c *conf.Config, svr *service.Service) {
 		micro.Version("latest"),
 	)
 
-	oauth2.RegisterOauth2Handler(s.Server(), svr)
+	_ = oauth2.RegisterOauth2Handler(s.Server(), svr)
 
 	go func() {
 		if err := s.Run(); err != nil {

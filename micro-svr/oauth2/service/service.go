@@ -1,9 +1,13 @@
 package service
 
 import (
+	"context"
+
 	"chick/micro-svr/oauth2/conf"
 	"chick/micro-svr/oauth2/dao"
 )
+
+var ctx = context.Background()
 
 type Service struct {
 	dao *dao.Dao

@@ -19,5 +19,4 @@ func InitRedisCluster(c *Redis) (r *redis.ClusterClient) {
 		panic(err)
 	}
 	return r
-
 }

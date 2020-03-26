@@ -1,9 +1,13 @@
 package service
 
 import (
+	"context"
+
 	"chick/app-svr/app-admin/conf"
 	"chick/app-svr/app-admin/dao"
 )
+
+var ctx = context.Background()
 
 type Service struct {
 	dao *dao.Dao

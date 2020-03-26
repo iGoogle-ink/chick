@@ -5,11 +5,15 @@ package micro.service.oauth2;
 option go_package = "oauth2";
 
 message AccessTokenReq {
-
+    string ClientId = 1;
+    string ClientSecret = 2;
+    string RedirectURI = 3;
+    string Scope = 4;
 }
 
 message AccessTokenReply {
-
+    string AccessToken = 1;
+    int64 ExpiresIn = 2;
 }
 
 message UserReq {
@@ -31,7 +35,7 @@ message UserOpenIDReply {
 service Oauth2 {
     rpc AccessToken (AccessTokenReq) returns (AccessTokenReply) {
     }
-    rpc User (UserReq) returns (UserReply) {
+    rpc Auth (UserReq) returns (UserReply) {
     }
     rpc UserOpenID (UserOpenIDReq) returns (UserOpenIDReply) {
     }
