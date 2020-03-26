@@ -46,7 +46,6 @@ message RemoveTokenReply {
     bool IsOk = 1;
 }
 
-
 service Oauth2 {
     // 获取AccessToken
     rpc AccessToken (AccessTokenReq) returns (AccessTokenReply) {
