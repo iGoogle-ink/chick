@@ -4,18 +4,16 @@ import (
 	"fmt"
 	"time"
 
-	xtime "chick/pkg/time"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 // MySQL mysql config.
 type MySQL struct {
-	DSN         string         // data source name.
-	Active      int            // pool
-	Idle        int            // pool
-	IdleTimeout xtime.Duration // connect max life time.
+	DSN         string // data source name.
+	Active      int    // pool
+	Idle        int    // pool
+	IdleTimeout int    // connect max life time. second
 	ShowSQL     bool
 }
 

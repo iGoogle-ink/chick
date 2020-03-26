@@ -1,6 +1,8 @@
 package service
 
-import "chick/app-svr/app-admin/model"
+import (
+	"chick/app-svr/app-admin/model"
+)
 
 // Login login
 func (s *Service) Login() (rsp *model.LoginRsp, err error) {
