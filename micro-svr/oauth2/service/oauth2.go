@@ -6,7 +6,7 @@ import (
 	"chick/api/oauth2"
 )
 
-// AccessToken get access_token
+// AccessToken 获取 access token
 func (s *Service) AccessToken(ctx context.Context, in *oauth2.AccessTokenReq, out *oauth2.AccessTokenReply) (err error) {
 	// todo: get user openid
 
@@ -21,6 +21,7 @@ func (s *Service) AccessToken(ctx context.Context, in *oauth2.AccessTokenReq, ou
 	return nil
 }
 
+// VerifyToken 验证 access token 并返回 openid
 func (s *Service) VerifyToken(ctx context.Context, in *oauth2.VerifyTokenReq, out *oauth2.VerifyTokenReply) (err error) {
 	openId, err := s.dao.VerifyAccessToken(ctx, in.AccessToken)
 	if err != nil {
@@ -30,6 +31,7 @@ func (s *Service) VerifyToken(ctx context.Context, in *oauth2.VerifyTokenReq, ou
 	return nil
 }
 
+// RefreshToken 刷新 access token
 func (s *Service) RefreshToken(ctx context.Context, in *oauth2.RefreshTokenReq, out *oauth2.RefreshTokenReply) (err error) {
 	token, err := s.dao.RefreshAccessToken(ctx, in.ClientId, in.ClientSecret, in.RefreshToken)
 	if err != nil {
@@ -42,6 +44,7 @@ func (s *Service) RefreshToken(ctx context.Context, in *oauth2.RefreshTokenReq, 
 	return nil
 }
 
+// RemoveToken 删除 access token
 func (s *Service) RemoveToken(ctx context.Context, in *oauth2.RemoveTokenReq, out *oauth2.RemoveTokenReply) (err error) {
 	isOk, _ := s.dao.RemoveAccessToken(ctx, in.AccessToken)
 	out.IsOk = isOk
