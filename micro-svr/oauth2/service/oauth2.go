@@ -22,8 +22,11 @@ func (s *Service) AccessToken(ctx context.Context, in *oauth2.AccessTokenReq, ou
 }
 
 func (s *Service) VerifyToken(ctx context.Context, in *oauth2.VerifyTokenReq, out *oauth2.VerifyTokenReply) (err error) {
-	isOk, _ := s.dao.VerifyAccessToken(ctx, in.AccessToken)
-	out.IsOk = isOk
+	openId, err := s.dao.VerifyAccessToken(ctx, in.AccessToken)
+	if err != nil {
+		return err
+	}
+	out.Openid = openId
 	return nil
 }
 

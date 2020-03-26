@@ -22,7 +22,7 @@ message VerifyTokenReq {
 }
 
 message VerifyTokenReply {
-    bool IsOk = 1;
+    string Openid = 1;
 }
 
 message RefreshTokenReq {

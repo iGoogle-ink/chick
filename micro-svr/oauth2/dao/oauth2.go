@@ -30,12 +30,12 @@ func (d *Dao) GenerateAccessToken(ctx context.Context, id, secret, code, userId 
 	return token, nil
 }
 
-func (d *Dao) VerifyAccessToken(ctx context.Context, access string) (isOk bool, err error) {
-	_, err = d.Oauth2Dao.Manager.LoadAccessToken(access)
+func (d *Dao) VerifyAccessToken(ctx context.Context, access string) (openId string, err error) {
+	tokenInfo, err := d.Oauth2Dao.Manager.LoadAccessToken(access)
 	if err != nil {
-		return false, err
+		return "", err
 	}
-	return true, nil
+	return tokenInfo.GetUserID(), nil
 }
 
 func (d *Dao) RefreshAccessToken(ctx context.Context, id, secret, refresh string) (token *model.TokenInfo, err error) {
