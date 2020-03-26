@@ -34,9 +34,14 @@ var _ server.Option
 // Client API for Oauth2 service
 
 type Oauth2Service interface {
+	// 获取AccessToken
 	AccessToken(ctx context.Context, in *AccessTokenReq, opts ...client.CallOption) (*AccessTokenReply, error)
-	User(ctx context.Context, in *UserReq, opts ...client.CallOption) (*UserReply, error)
-	UserOpenID(ctx context.Context, in *UserOpenIDReq, opts ...client.CallOption) (*UserOpenIDReply, error)
+	// 验证AccessToken
+	VerifyToken(ctx context.Context, in *VerifyTokenReq, opts ...client.CallOption) (*VerifyTokenReply, error)
+	// 刷新AccessToken
+	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...client.CallOption) (*RefreshTokenReply, error)
+	// 删除AccessToken
+	RemoveToken(ctx context.Context, in *RemoveTokenReq, opts ...client.CallOption) (*RemoveTokenReply, error)
 }
 
 type oauth2Service struct {
@@ -61,9 +66,9 @@ func (c *oauth2Service) AccessToken(ctx context.Context, in *AccessTokenReq, opt
 	return out, nil
 }
 
-func (c *oauth2Service) User(ctx context.Context, in *UserReq, opts ...client.CallOption) (*UserReply, error) {
-	req := c.c.NewRequest(c.name, "Oauth2.User", in)
-	out := new(UserReply)
+func (c *oauth2Service) VerifyToken(ctx context.Context, in *VerifyTokenReq, opts ...client.CallOption) (*VerifyTokenReply, error) {
+	req := c.c.NewRequest(c.name, "Oauth2.VerifyToken", in)
+	out := new(VerifyTokenReply)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -71,9 +76,19 @@ func (c *oauth2Service) User(ctx context.Context, in *UserReq, opts ...client.Ca
 	return out, nil
 }
 
-func (c *oauth2Service) UserOpenID(ctx context.Context, in *UserOpenIDReq, opts ...client.CallOption) (*UserOpenIDReply, error) {
-	req := c.c.NewRequest(c.name, "Oauth2.UserOpenID", in)
-	out := new(UserOpenIDReply)
+func (c *oauth2Service) RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...client.CallOption) (*RefreshTokenReply, error) {
+	req := c.c.NewRequest(c.name, "Oauth2.RefreshToken", in)
+	out := new(RefreshTokenReply)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *oauth2Service) RemoveToken(ctx context.Context, in *RemoveTokenReq, opts ...client.CallOption) (*RemoveTokenReply, error) {
+	req := c.c.NewRequest(c.name, "Oauth2.RemoveToken", in)
+	out := new(RemoveTokenReply)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -84,16 +99,22 @@ func (c *oauth2Service) UserOpenID(ctx context.Context, in *UserOpenIDReq, opts 
 // Server API for Oauth2 service
 
 type Oauth2Handler interface {
+	// 获取AccessToken
 	AccessToken(context.Context, *AccessTokenReq, *AccessTokenReply) error
-	User(context.Context, *UserReq, *UserReply) error
-	UserOpenID(context.Context, *UserOpenIDReq, *UserOpenIDReply) error
+	// 验证AccessToken
+	VerifyToken(context.Context, *VerifyTokenReq, *VerifyTokenReply) error
+	// 刷新AccessToken
+	RefreshToken(context.Context, *RefreshTokenReq, *RefreshTokenReply) error
+	// 删除AccessToken
+	RemoveToken(context.Context, *RemoveTokenReq, *RemoveTokenReply) error
 }
 
 func RegisterOauth2Handler(s server.Server, hdlr Oauth2Handler, opts ...server.HandlerOption) error {
 	type oauth2 interface {
 		AccessToken(ctx context.Context, in *AccessTokenReq, out *AccessTokenReply) error
-		User(ctx context.Context, in *UserReq, out *UserReply) error
-		UserOpenID(ctx context.Context, in *UserOpenIDReq, out *UserOpenIDReply) error
+		VerifyToken(ctx context.Context, in *VerifyTokenReq, out *VerifyTokenReply) error
+		RefreshToken(ctx context.Context, in *RefreshTokenReq, out *RefreshTokenReply) error
+		RemoveToken(ctx context.Context, in *RemoveTokenReq, out *RemoveTokenReply) error
 	}
 	type Oauth2 struct {
 		oauth2
@@ -110,10 +131,14 @@ func (h *oauth2Handler) AccessToken(ctx context.Context, in *AccessTokenReq, out
 	return h.Oauth2Handler.AccessToken(ctx, in, out)
 }
 
-func (h *oauth2Handler) User(ctx context.Context, in *UserReq, out *UserReply) error {
-	return h.Oauth2Handler.User(ctx, in, out)
+func (h *oauth2Handler) VerifyToken(ctx context.Context, in *VerifyTokenReq, out *VerifyTokenReply) error {
+	return h.Oauth2Handler.VerifyToken(ctx, in, out)
 }
 
-func (h *oauth2Handler) UserOpenID(ctx context.Context, in *UserOpenIDReq, out *UserOpenIDReply) error {
-	return h.Oauth2Handler.UserOpenID(ctx, in, out)
+func (h *oauth2Handler) RefreshToken(ctx context.Context, in *RefreshTokenReq, out *RefreshTokenReply) error {
+	return h.Oauth2Handler.RefreshToken(ctx, in, out)
+}
+
+func (h *oauth2Handler) RemoveToken(ctx context.Context, in *RemoveTokenReq, out *RemoveTokenReply) error {
+	return h.Oauth2Handler.RemoveToken(ctx, in, out)
 }

@@ -8,7 +8,7 @@ import (
 
 // AccessToken get access_token
 func (s *Service) AccessToken(ctx context.Context, in *oauth2.AccessTokenReq, reply *oauth2.AccessTokenReply) (err error) {
-	token, err := s.dao.GenerateAccessToken(ctx, in.ClientId, in.ClientSecret, in.RedirectURI, in.Scope)
+	token, err := s.dao.GenerateAccessToken(ctx, in.ClientId, in.ClientSecret, in.Code)
 	if err != nil {
 		return err
 	}
@@ -17,12 +17,17 @@ func (s *Service) AccessToken(ctx context.Context, in *oauth2.AccessTokenReq, re
 	return nil
 }
 
-func (s *Service) User(ctx context.Context, in *oauth2.UserReq, reply *oauth2.UserReply) (err error) {
+func (s *Service) VerifyToken(ctx context.Context, in *oauth2.VerifyTokenReq, reply *oauth2.VerifyTokenReply) (err error) {
 
 	return nil
 }
 
-func (s *Service) UserOpenID(ctx context.Context, in *oauth2.UserOpenIDReq, reply *oauth2.UserOpenIDReply) (err error) {
+func (s *Service) RefreshToken(ctx context.Context, in *oauth2.RefreshTokenReq, reply *oauth2.RefreshTokenReply) (err error) {
+
+	return nil
+}
+
+func (s *Service) RemoveToken(ctx context.Context, in *oauth2.RemoveTokenReq, reply *oauth2.RemoveTokenReply) (err error) {
 
 	return nil
 }

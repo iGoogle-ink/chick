@@ -1,43 +1,64 @@
 syntax = "proto3";
 
-package micro.service.oauth2;
+package oauth2;
 
-option go_package = "oauth2";
+//option go_package = "oauth2";
 
 message AccessTokenReq {
     string ClientId = 1;
     string ClientSecret = 2;
-    string RedirectURI = 3;
-    string Scope = 4;
+    string Code = 3;
 }
 
 message AccessTokenReply {
+    string AccessToken = 1; // 授权令牌，Access_Token
+    string ExpiresIn = 2; // 该access token的有效期，单位为秒
+    string RefreshToken = 3; // 在授权自动续期步骤中，获取新的Access_Token时需要提供的参数
+    string Openid = 4; // 用户唯一标识
+}
+
+message VerifyTokenReq {
     string AccessToken = 1;
-    int64 ExpiresIn = 2;
 }
 
-message UserReq {
-
+message VerifyTokenReply {
+    bool IsOk = 1;
 }
 
-message UserReply {
-
+message RefreshTokenReq {
+    string ClientId = 1;
+    string ClientSecret = 2;
+    string RefreshToken = 3;
 }
 
-message UserOpenIDReq {
-
+message RefreshTokenReply {
+    string AccessToken = 1; // 授权令牌，Access_Token
+    string ExpiresIn = 2; // 该access token的有效期，单位为秒
+    string RefreshToken = 3; // 在授权自动续期步骤中，获取新的Access_Token时需要提供的参数
+    string Openid = 4; // 用户唯一标识
 }
 
-message UserOpenIDReply {
-
+message RemoveTokenReq {
+    string AccessToken = 1;
 }
+
+message RemoveTokenReply {
+    bool IsOk = 1;
+}
+
 
 service Oauth2 {
+    // 获取AccessToken
     rpc AccessToken (AccessTokenReq) returns (AccessTokenReply) {
     }
-    rpc Auth (UserReq) returns (UserReply) {
+    // 验证AccessToken
+    rpc VerifyToken (VerifyTokenReq) returns (VerifyTokenReply) {
     }
-    rpc UserOpenID (UserOpenIDReq) returns (UserOpenIDReply) {
+    // 刷新AccessToken
+    rpc RefreshToken (RefreshTokenReq) returns (RefreshTokenReply) {
+    }
+    // 删除AccessToken
+    rpc RemoveToken (RemoveTokenReq) returns (RemoveTokenReply) {
     }
 }
 
