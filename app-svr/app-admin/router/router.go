@@ -31,7 +31,7 @@ func initRoute(g *gin.Engine) {
 	admin := g.Group("/admin")
 	{
 		admin.POST("/login", login)
-		mx := admin.Group("/xxx", xhttp.Verify)
+		mx := admin.Group("/xxx", srv.Verify)
 		{
 			mx.GET("/info")
 		}

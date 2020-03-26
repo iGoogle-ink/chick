@@ -16,7 +16,7 @@ func (d *Dao) GenerateAccessToken(ctx context.Context, id, secret, code, userId 
 		Code:         code,
 		UserID:       userId,
 	}
-	tokenInfo, err := d.Oauth2Dao.Manager.GenerateAccessToken(oauth.AuthorizationCode, tgr)
+	tokenInfo, err := d.oauth2Svr.Manager.GenerateAccessToken(oauth.AuthorizationCode, tgr)
 	if err != nil {
 		return nil, err
 
@@ -31,7 +31,7 @@ func (d *Dao) GenerateAccessToken(ctx context.Context, id, secret, code, userId 
 }
 
 func (d *Dao) VerifyAccessToken(ctx context.Context, access string) (openId string, err error) {
-	tokenInfo, err := d.Oauth2Dao.Manager.LoadAccessToken(access)
+	tokenInfo, err := d.oauth2Svr.Manager.LoadAccessToken(access)
 	if err != nil {
 		return "", err
 	}
@@ -44,7 +44,7 @@ func (d *Dao) RefreshAccessToken(ctx context.Context, id, secret, refresh string
 		ClientSecret: secret,
 		Refresh:      refresh,
 	}
-	tokenInfo, err := d.Oauth2Dao.Manager.RefreshAccessToken(tgr)
+	tokenInfo, err := d.oauth2Svr.Manager.RefreshAccessToken(tgr)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (d *Dao) RefreshAccessToken(ctx context.Context, id, secret, refresh string
 }
 
 func (d *Dao) RemoveAccessToken(ctx context.Context, access string) (isOk bool, err error) {
-	err = d.Oauth2Dao.Manager.RemoveAccessToken(access)
+	err = d.oauth2Svr.Manager.RemoveAccessToken(access)
 	if err != nil {
 		return false, err
 	}

@@ -5,6 +5,9 @@ import (
 
 	"chick/app-svr/app-admin/conf"
 	"chick/app-svr/app-admin/dao"
+	"chick/pkg/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 var ctx = context.Background()
@@ -24,4 +27,16 @@ func (s *Service) Close() {
 	if s.dao != nil {
 		s.dao.Close()
 	}
+}
+
+func (s *Service) Verify(c *gin.Context) {
+	req := c.Request
+	token := req.Header.Get("Authorization")
+
+	_, err := s.dao.VerifyToken(ctx, token)
+	if err != nil {
+		http.JSON(c, nil, err)
+		return
+	}
+
 }

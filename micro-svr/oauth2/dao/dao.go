@@ -16,8 +16,8 @@ import (
 
 type Dao struct {
 	DB        *gorm.DB
-	Redis     *redis.ClusterClient
-	Oauth2Dao *server.Server
+	redisCli  *redis.ClusterClient
+	oauth2Svr *server.Server
 }
 
 func New(c *conf.Config) (d *Dao) {
@@ -25,8 +25,8 @@ func New(c *conf.Config) (d *Dao) {
 
 	d = &Dao{
 		DB:        orm.InitMySQL(c.MySQL),
-		Redis:     redisCluster,
-		Oauth2Dao: newOauth2Dao(c.Clients, redisCluster),
+		redisCli:  redisCluster,
+		oauth2Svr: newOauth2Dao(c.Clients, redisCluster),
 	}
 	return
 }
