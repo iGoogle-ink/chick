@@ -3,19 +3,21 @@ package service
 import (
 	"context"
 
-	"chick/app/web-svr/admin/conf"
-	"chick/app/web-svr/admin/dao"
+	"chick/app/account/oauth2/conf"
+	"chick/app/account/oauth2/dao"
 )
 
 var ctx = context.Background()
 
 type Service struct {
 	dao *dao.Dao
+	c   *conf.Config
 }
 
 func New(c *conf.Config) (srv *Service) {
 	srv = &Service{
 		dao: dao.New(c),
+		c:   c,
 	}
 	return srv
 }

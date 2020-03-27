@@ -3,12 +3,11 @@ package router
 import (
 	"net/http"
 
-	"chick/app/web-svr/admin/conf"
-	"chick/app/web-svr/admin/service"
+	"chick/app/account/oauth2/conf"
+	"chick/app/account/oauth2/service"
 	"chick/pkg/web"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/render"
 )
 
 var (
@@ -17,7 +16,6 @@ var (
 
 func Init(c *conf.Config, s *service.Service) {
 	srv = s
-
 	g := web.InitServer(c.Port)
 
 	initRoute(g.Gin)
@@ -26,18 +24,20 @@ func Init(c *conf.Config, s *service.Service) {
 }
 
 func initRoute(g *gin.Engine) {
-	g.GET("/admin/ping", ping)
+	g.GET("/account/ping", ping)
 
-	admin := g.Group("/admin")
+	acc := g.Group("/account")
 	{
-		admin.POST("/login", login)
-		mx := admin.Group("/xxx")
+		oa := acc.Group("/oauth")
 		{
-			mx.GET("/info")
+			oa.GET("/authorize", authorize)
+			oa.POST("/login", login)
+			oa.POST("/token", token)
 		}
 	}
+
 }
 
 func ping(c *gin.Context) {
-	c.Render(http.StatusOK, render.JSON{})
+	c.JSON(http.StatusOK, gin.H{"message": "Pong"})
 }

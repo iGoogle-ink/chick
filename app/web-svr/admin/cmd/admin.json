@@ -1,6 +1,6 @@
 {
   "prod": {
-    "Name": "app.service.admin",
+    "Name": "web.service.admin",
     "Port": ":2233",
     "Redis": {
       "Addr": "120.0.0.1:1001",

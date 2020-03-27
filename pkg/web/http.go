@@ -1,4 +1,4 @@
-package http
+package web
 
 import (
 	"log"
@@ -22,7 +22,7 @@ func InitServer(port string) *Engine {
 func (e *Engine) Start() {
 	go func() {
 		if err := e.Gin.Run(e.port); err != nil {
-			log.Printf("http server port(%s) run error(%+v).\n", e.port, err)
+			log.Printf("web server port(%s) run error(%+v).\n", e.port, err)
 			return
 		}
 	}()

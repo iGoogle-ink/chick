@@ -1,9 +1,10 @@
-package http
+package web
 
 import (
 	"net/http"
 
 	"chick/errno"
+
 	"github.com/gin-gonic/gin"
 )
 

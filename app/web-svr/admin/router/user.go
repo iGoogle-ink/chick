@@ -1,7 +1,7 @@
 package router
 
 import (
-	"chick/pkg/http"
+	"chick/pkg/web"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,5 +11,5 @@ func login(c *gin.Context) {
 
 	rsp, err := srv.Login()
 
-	http.JSON(c, rsp, err)
+	web.JSON(c, rsp, err)
 }
