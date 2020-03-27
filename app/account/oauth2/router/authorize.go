@@ -15,5 +15,5 @@ func authorize(c *gin.Context) {
 		web.JSON(c, nil, errno.RequestErr)
 		return
 	}
-	srv.Authorize(req.ClientId, req.ResponseType, req.RedirectUri, req.State)
+	srv.Authorize(req.ClientKey, req.ResponseType, req.RedirectUri, req.State)
 }

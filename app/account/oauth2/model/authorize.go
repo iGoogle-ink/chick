@@ -1,7 +1,7 @@
 package model
 
 type AuthorizeReq struct {
-	ClientId     string `form:"client_id"`
+	ClientKey    string `form:"client_key"`
 	ResponseType string `form:"response_type"`
 	RedirectUri  string `form:"redirect_uri"`
 	State        string `form:"state"`
