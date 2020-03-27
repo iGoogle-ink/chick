@@ -1,8 +1,11 @@
 package model
 
-type MxUser struct {
-	Name string `json:"name"`
-}
+// db model
+type (
+	MxUser struct {
+		Name string `json:"name"`
+	}
+)
 
 func (m *MxUser) TableName() string {
 	return "mx_user"
@@ -10,4 +13,8 @@ func (m *MxUser) TableName() string {
 
 type LoginRsp struct {
 	Token string `json:"token"`
+}
+
+func (d *LoginRsp) CopyFromUser(user *MxUser) {
+	d.Token = user.Name
 }

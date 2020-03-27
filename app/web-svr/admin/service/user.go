@@ -11,8 +11,9 @@ func (s *Service) Login() (rsp *model.LoginRsp, err error) {
 	if err != nil {
 		return nil, err
 	}
-	rsp = &model.LoginRsp{
-		Token: user.Name,
-	}
+	rsp = new(model.LoginRsp)
+
+	rsp.CopyFromUser(user)
+
 	return rsp, nil
 }
