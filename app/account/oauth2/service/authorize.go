@@ -43,5 +43,6 @@ func generateCode(userId int, client *model.OauthClient) (code string) {
 	hash := md5.New()
 	hash.Write([]byte(client.Key))
 	hash.Write([]byte(strconv.Itoa(userId)))
+	hash.Write([]byte(time.Now().String()))
 	return hex.EncodeToString(hash.Sum(nil))
 }
