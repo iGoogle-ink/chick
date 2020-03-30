@@ -9,5 +9,5 @@ func (s *Service) Authorize(userId int, clientKey, rspType, reUri, state string)
 		return "", errno.RequestErr
 	}
 
-	s.dao.GrantAuthorizationCode(ctx, userId, clientKey, reUri)
+	s.dao.AuthorizationCode(ctx, userId, clientKey, reUri)
 }
