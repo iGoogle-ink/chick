@@ -9,3 +9,7 @@ type (
 		RedirectUri string
 	}
 )
+
+func (m *OauthClient) TableName() string {
+	return "oauth_client"
+}

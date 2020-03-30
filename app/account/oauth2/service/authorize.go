@@ -1,13 +1,47 @@
 package service
 
-import "chick/errno"
+import (
+	"crypto/md5"
+	"encoding/hex"
+	"strconv"
+	"time"
+
+	"chick/app/account/oauth2/model"
+	"chick/errno"
+)
 
 // Authorize
-func (s *Service) Authorize(userId int, clientKey, rspType, reUri, state string) (code string, err error) {
-	// step1: find client info by client id
+func (s *Service) Authorize(userId int, clientKey, rspType, redUri, scope, state string) (locationUrl string, err error) {
 	if rspType != "code" {
 		return "", errno.RequestErr
 	}
+	// 查找Client信息
+	client, err := s.dao.GetClient(ctx, clientKey)
+	if err != nil {
+		return "", errno.New(-1, "查找Client失败")
+	}
+	// 生成code
+	code := generateCode(userId, client)
 
-	s.dao.AuthorizationCode(ctx, userId, clientKey, reUri)
+	codeInsert := &model.OauthAuthCode{
+		ClientId:    client.Id,
+		UserId:      userId,
+		Code:        code,
+		RedirectUri: redUri,
+		ExpiresAt:   time.Now().Add(time.Duration(5) * time.Minute),
+		Scope:       scope,
+	}
+	// code 写入数据库
+	err = s.dao.InsertAuthorizationCode(ctx, codeInsert)
+	if err != nil {
+		return "", errno.New(-2, "生成Code失败")
+	}
+	return redUri + "?" + code + "&state=" + state, nil
+}
+
+func generateCode(userId int, client *model.OauthClient) (code string) {
+	hash := md5.New()
+	hash.Write([]byte(client.Key))
+	hash.Write([]byte(strconv.Itoa(userId)))
+	return hex.EncodeToString(hash.Sum(nil))
 }

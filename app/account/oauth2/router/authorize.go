@@ -33,12 +33,12 @@ func authorize(c *gin.Context) {
 		web.JSON(c, nil, errno.RequestErr)
 		return
 	}
-	code, err := srv.Authorize(userId, req.ClientKey, req.ResponseType, req.RedirectUri, req.State)
+	locationUrl, err := srv.Authorize(userId, req.ClientKey, req.ResponseType, req.RedirectUri, req.Scope, req.State)
 	if err != nil {
 		web.JSON(c, nil, err)
 		return
 	}
-	web.Redirect(c, req.RedirectUri+"?"+code+"&state="+req.State)
+	web.Redirect(c, locationUrl)
 }
 
 func callback(c *gin.Context) {
