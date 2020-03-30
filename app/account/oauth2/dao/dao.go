@@ -1,21 +1,21 @@
 package dao
 
 import (
-	"chick/app/account/oauth2/conf"
-	"chick/pkg/orm"
-
+	"github.com/go-redis/redis/v7"
 	"github.com/jinzhu/gorm"
 )
 
 type Dao struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	redis *redis.ClusterClient
 }
 
-func New(c *conf.Config) (d *Dao) {
+func New(mysql *gorm.DB, redisCli *redis.ClusterClient) (d *Dao) {
 	d = &Dao{
-		DB: orm.InitMySQL(c.MySQL),
+		DB:    mysql,
+		redis: redisCli,
 	}
-	return
+	return d
 }
 
 func (d *Dao) Close() {

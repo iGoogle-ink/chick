@@ -6,16 +6,20 @@ import (
 	"chick/app/account/oauth2/conf"
 	"chick/app/account/oauth2/service"
 	"chick/pkg/web"
+	"gopkg.in/oauth2.v3/server"
 
 	"github.com/gin-gonic/gin"
 )
 
 var (
-	srv *service.Service
+	srv      *service.Service
+	oauthSrv *server.Server
 )
 
-func Init(c *conf.Config, s *service.Service) {
+func Init(c *conf.Config, s *service.Service, os *server.Server) {
 	srv = s
+	oauthSrv = os
+
 	g := web.InitServer(c.Port)
 
 	initRoute(g.Gin)

@@ -9,7 +9,9 @@ import (
 
 	"chick/app/account/oauth2/conf"
 	"chick/app/account/oauth2/router"
+	"chick/app/account/oauth2/server"
 	"chick/app/account/oauth2/service"
+	"chick/pkg/orm"
 )
 
 func main() {
@@ -18,9 +20,16 @@ func main() {
 		panic(err)
 	}
 
-	srv := service.New(conf.Conf)
+	redisCli := orm.InitRedisCluster(conf.Conf.Redis)
+	mysqlCli := orm.InitMySQL(conf.Conf.MySQL)
 
-	router.Init(conf.Conf, srv)
+	clients := server.InitClient(mysqlCli)
+
+	oauthSrv := server.NewOauthServer(redisCli, clients)
+
+	srv := service.New(conf.Conf, mysqlCli, redisCli)
+
+	router.Init(conf.Conf, srv, oauthSrv)
 
 	ch := make(chan os.Signal)
 	signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
