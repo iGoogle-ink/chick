@@ -1,7 +1,11 @@
 package dao
 
-import "context"
+import (
+	"context"
 
-func (d *Dao) AuthorizationCode(ctx context.Context, userId int, clientKey, reUri string) {
+	"chick/app/account/oauth2/model"
+)
 
+func (d *Dao) InsertAuthorizationCode(ctx context.Context, oauthCode *model.OauthAuthCode) error {
+	return d.DB.Create(oauthCode).Error
 }
