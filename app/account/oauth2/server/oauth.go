@@ -21,7 +21,7 @@ func InitClient(db *gorm.DB) (clients []*model.OauthClient) {
 func NewOauthServer(redisCli *redis.ClusterClient, clients []*model.OauthClient) (oauthSrv *server.Server) {
 	mgr := manage.NewDefaultManager()
 
-	mgr.MustTokenStorage(xStore.NewRedisClusterStoreWithCli(redisCli), nil)
+	mgr.MapTokenStorage(xStore.NewRedisClusterStoreWithCli(redisCli))
 
 	clientStore := store.NewClientStore()
 

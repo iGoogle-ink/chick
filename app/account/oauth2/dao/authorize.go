@@ -11,5 +11,4 @@ func (d *Dao) InsertAuthorizationCode(ctx context.Context, oauthCode *model.Oaut
 }
 
 func (d *Dao) AuthorizeCode() {
-	d.oauthDao.HandleAuthorizeRequest()
 }
