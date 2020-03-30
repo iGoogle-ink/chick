@@ -16,8 +16,8 @@ type Dao struct {
 
 func New(c *conf.Config) (d *Dao) {
 	d = &Dao{
-		DB:        orm.InitMySQL(c.MySQL),
-		oauthGrpc: newOauth2Client("micro.service.oauth2.client", "micro.service.oauth2"),
+		DB: orm.InitMySQL(c.MySQL),
+		//oauthGrpc: newOauth2Client("micro.service.oauth2.client", "micro.service.oauth2"),
 	}
 	return
 }

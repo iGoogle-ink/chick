@@ -21,12 +21,12 @@ type Dao struct {
 }
 
 func New(c *conf.Config) (d *Dao) {
-	redisCluster := orm.InitRedisCluster(c.Redis)
-
+	//redisCluster := orm.InitRedisCluster(c.Redis)
+	r := new(redis.ClusterClient)
 	d = &Dao{
 		DB:        orm.InitMySQL(c.MySQL),
-		redisCli:  redisCluster,
-		oauth2Svr: newOauth2Dao(c.Clients, redisCluster),
+		redisCli:  r,
+		oauth2Svr: newOauth2Dao(c.Clients, r),
 	}
 	return
 }

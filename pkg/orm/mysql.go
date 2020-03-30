@@ -20,6 +20,7 @@ type MySQL struct {
 func InitMySQL(c *MySQL) (db *gorm.DB) {
 
 	db, err := gorm.Open("mysql", c.DSN)
+	fmt.Println(c.DSN)
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect database error:%+v", err))
 	}

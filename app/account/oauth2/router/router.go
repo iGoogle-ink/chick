@@ -31,8 +31,9 @@ func initRoute(g *gin.Engine) {
 		oa := acc.Group("/oauth")
 		{
 			oa.GET("/authorize", authorize)
-			oa.POST("/login", login)
+			oa.GET("/login", login)
 			oa.POST("/token", token)
+			oa.GET("/callback", callback)
 		}
 	}
 
