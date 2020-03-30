@@ -1,8 +1,13 @@
 package service
 
-// Authorize
-func (s *Service) Authorize(clientKey, rspType, reUri, state string) {
-	// step1: find client info by client id
+import "chick/errno"
 
-	s.dao.GrantAuthorizationCode(ctx)
+// Authorize
+func (s *Service) Authorize(userId int, clientKey, rspType, reUri, state string) (code string, err error) {
+	// step1: find client info by client id
+	if rspType != "code" {
+		return "", errno.RequestErr
+	}
+
+	s.dao.GrantAuthorizationCode(ctx, userId, clientKey, reUri)
 }

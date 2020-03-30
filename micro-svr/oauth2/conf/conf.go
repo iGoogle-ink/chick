@@ -1,7 +1,7 @@
 package conf
 
 import (
-	"flag"
+	"os"
 
 	"chick/pkg/orm"
 	"chick/pkg/store"
@@ -11,9 +11,7 @@ import (
 )
 
 var (
-	env      string
-	filePath string
-	Conf     = &Config{}
+	Conf = &Config{}
 )
 
 type Config struct {
@@ -25,13 +23,13 @@ type Config struct {
 }
 
 func init() {
-	flag.StringVar(&env, "env", "", "env or prod")
-	flag.StringVar(&filePath, "conf", "", "conf file path")
+
 }
 
 // 解析配置文件
 func Parse() error {
-	flag.Parse()
+	env := os.Getenv("MICRO_OAUTH_ENV")
+	filePath := os.Getenv("MICRO_OAUTH_CONF")
 	if filePath == "" {
 		return errors.New("load conf path fail")
 	}

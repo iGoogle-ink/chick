@@ -46,6 +46,15 @@ message RemoveTokenReply {
     bool IsOk = 1;
 }
 
+message AuthorizationCodeReq {
+    int64 UserId = 1;
+
+}
+
+message AuthorizationCodeReply {
+
+}
+
 service Oauth2 {
     // 获取AccessToken
     rpc AccessToken (AccessTokenReq) returns (AccessTokenReply) {
@@ -58,6 +67,10 @@ service Oauth2 {
     }
     // 删除AccessToken
     rpc RemoveToken (RemoveTokenReq) returns (RemoveTokenReply) {
+    }
+    // 获取Code
+    rpc AuthorizationCode (AuthorizationCodeReq) returns (AuthorizationCodeReply) {
+
     }
 }
 

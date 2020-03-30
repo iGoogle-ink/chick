@@ -30,10 +30,11 @@ func initRoute(g *gin.Engine) {
 	{
 		oa := acc.Group("/oauth")
 		{
-			oa.GET("/authorize", authorize)
-			oa.GET("/login", login)
+			oa.POST("/authorize", authorize)
+			oa.POST("/login", login)
 			oa.POST("/token", token)
-			oa.GET("/callback", callback)
+			oa.POST("/refresh", refreshToken)
+			//oa.GET("/callback", callback)
 		}
 	}
 
@@ -41,4 +42,9 @@ func initRoute(g *gin.Engine) {
 
 func ping(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Pong"})
+}
+
+func getUserId(session string) (id int) {
+
+	return 1
 }

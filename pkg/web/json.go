@@ -23,3 +23,7 @@ func JSON(c *gin.Context, data interface{}, err error) {
 
 	c.JSON(http.StatusOK, rsp)
 }
+
+func Redirect(c *gin.Context, location string) {
+	c.Redirect(http.StatusFound, location)
+}
