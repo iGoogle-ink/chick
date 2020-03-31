@@ -25,6 +25,7 @@ func InitMySQL(c *MySQL) (db *gorm.DB) {
 		panic(fmt.Sprintf("failed to connect database error:%+v", err))
 	}
 	db.DB().SetMaxIdleConns(c.Idle)
+	db.LogMode(true)
 	db.DB().SetMaxOpenConns(c.Active)
 	db.DB().SetConnMaxLifetime(time.Duration(c.IdleTimeout))
 

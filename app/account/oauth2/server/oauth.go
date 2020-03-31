@@ -2,10 +2,8 @@ package server
 
 import (
 	"chick/app/account/oauth2/model"
-	xStore "chick/pkg/store"
-	"github.com/jinzhu/gorm"
 
-	"github.com/go-redis/redis/v7"
+	"github.com/jinzhu/gorm"
 	"gopkg.in/oauth2.v3/manage"
 	"gopkg.in/oauth2.v3/models"
 	"gopkg.in/oauth2.v3/server"
@@ -18,10 +16,11 @@ func InitClient(db *gorm.DB) (clients []*model.OauthClient) {
 	return
 }
 
-func NewOauthServer(redisCli *redis.ClusterClient, clients []*model.OauthClient) (oauthSrv *server.Server) {
+func NewOauthServer( /*redisCli *redis.ClusterClient, */ clients []*model.OauthClient) (oauthSrv *server.Server) {
 	mgr := manage.NewDefaultManager()
 
-	mgr.MapTokenStorage(xStore.NewRedisClusterStoreWithCli(redisCli))
+	//mgr.MapTokenStorage(xStore.NewRedisClusterStoreWithCli(redisCli))
+	mgr.MustTokenStorage(store.NewMemoryTokenStore())
 
 	clientStore := store.NewClientStore()
 
@@ -30,7 +29,6 @@ func NewOauthServer(redisCli *redis.ClusterClient, clients []*model.OauthClient)
 			ID:     v.Key,
 			Secret: v.Secret,
 			Domain: v.RedirectUri,
-			UserID: "0",
 		})
 	}
 

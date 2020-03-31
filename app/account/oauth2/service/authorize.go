@@ -3,6 +3,7 @@ package service
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"log"
 	"strconv"
 	"time"
 
@@ -18,6 +19,7 @@ func (s *Service) Authorize(userId int, clientKey, rspType, redUri, scope, state
 	// 查找Client信息
 	client, err := s.dao.GetClient(ctx, clientKey)
 	if err != nil {
+		log.Printf("s.dao.GetClient(%s) err:%+v,\n", clientKey, err)
 		return "", errno.New(-1, "查找Client失败")
 	}
 	// 生成code
@@ -36,7 +38,7 @@ func (s *Service) Authorize(userId int, clientKey, rspType, redUri, scope, state
 	if err != nil {
 		return "", errno.New(-2, "生成Code失败")
 	}
-	return redUri + "?" + code + "&state=" + state, nil
+	return redUri + "?code=" + code + "&state=" + state, nil
 }
 
 func generateCode(userId int, client *model.OauthClient) (code string) {
