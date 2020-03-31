@@ -17,7 +17,7 @@ type Config struct {
 	Name           string
 	Port           string
 	Addrs          []string
-	TokenExpiresIn int //单位:秒
+	TokenExpiresIn int // 单位:秒
 	MySQL          *orm.MySQL
 	Redis          *orm.Redis
 }
