@@ -14,6 +14,7 @@ func (d *Dao) CloudUserInfo(ctx context.Context, uname string) (user *model.Clou
 	if err != nil {
 		return nil, err
 	}
+	return user, nil
 }
 
 func (d *Dao) InsertCloudUser(ctx context.Context, user *model.CloudUser) (id int, err error) {

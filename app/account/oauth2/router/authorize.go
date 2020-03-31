@@ -12,21 +12,22 @@ import (
 )
 
 func authorize(c *gin.Context) {
-	query := c.Request.URL.Query()
-	// 用户未登录，跳转到登录页面
+	params := c.Request.URL.Query().Encode()
+	// cookie中未找到session，跳转到登录页面
 	session, _ := c.Cookie("session")
 	fmt.Println("session:", session)
-
 	if session == "" {
-		params := query.Encode()
 		loginUrl, _ := url.Parse("http://localhost:8082/account/static/login")
-		loginUrl.Query().Set("client_id", query.Get("client_id"))
-		loginUrl.Query().Set("return_to", query.Get("redirect_uri"))
 		web.Redirect(c, loginUrl.String()+"?"+params)
 		return
 	}
 	// 已登录，获取用户id
 	userId := checkAndGetUserId(session)
+	if userId <= 0 {
+		loginUrl, _ := url.Parse("http://localhost:8082/account/static/login")
+		web.Redirect(c, loginUrl.String()+"?"+params)
+		return
+	}
 
 	req := new(model.AuthorizeReq)
 	err := c.ShouldBind(req)
@@ -42,19 +43,4 @@ func authorize(c *gin.Context) {
 	}
 	fmt.Println("locationUrl:", locationUrl)
 	web.Redirect(c, locationUrl)
-}
-
-//func authorize(c *gin.Context) {
-//	oauthSrv.HandleTokenRequest(c.Writer, c.Request)
-//	err := oauthSrv.HandleAuthorizeRequest(c.Writer, c.Request)
-//	if err != nil {
-//		web.JSON(c, nil, err)
-//	}
-//}
-
-func callback(c *gin.Context) {
-	code := c.Query("code")
-	state := c.Query("state")
-	fmt.Println("code:", code)
-	fmt.Println("state:", state)
 }

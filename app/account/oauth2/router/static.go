@@ -13,3 +13,7 @@ func loginHtml(c *gin.Context) {
 func authHtml(c *gin.Context) {
 	c.HTML(http.StatusOK, "auth.html", nil)
 }
+
+func registerHtml(c *gin.Context) {
+	c.HTML(http.StatusOK, "register.html", nil)
+}

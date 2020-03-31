@@ -43,7 +43,7 @@ func initRoute(g *gin.Engine) {
 		{
 			html.GET("/login", loginHtml)
 			html.GET("/auth", authHtml)
-
+			html.GET("/register", registerHtml)
 		}
 	}
 }
