@@ -16,11 +16,11 @@ import (
 )
 
 // GetAccessToken
-func (s *Service) GetAccessToken(ctx context.Context, clientKey, clientSecret, code, grantType string) (*model.AccessTokenReply, error) {
+func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq) (*model.AccessTokenRsp, error) {
 
 	// 校验code
-	dbCode, err := s.dao.GetCodeInfoByCode(ctx, code)
-	if (err != nil && err != gorm.ErrRecordNotFound) || (dbCode == nil) {
+	dbCode, err := s.dao.GetCodeInfoByCode(ctx, req.Code)
+	if err != nil {
 		return nil, errno.InvalidCode
 	}
 	//校验code 过期
@@ -28,34 +28,61 @@ func (s *Service) GetAccessToken(ctx context.Context, clientKey, clientSecret, c
 		return nil, errno.CodeExpired
 	}
 	// 校验 client_key, client_secret
-	if ok, err := s.dao.CheckClientInfo(ctx, dbCode.ClientId, clientKey, clientSecret); err != nil {
+	ok, err := s.dao.CheckClientInfo(ctx, dbCode.ClientId, req.ClientId, req.ClientSecret)
+	if err != nil {
 		return nil, errno.InvalidCode
-	} else {
-		if !ok {
-			return nil, errno.InvalidClient
-		}
+	}
+	if !ok {
+		return nil, errno.InvalidClient
 	}
 
 	// 生成token
-	access, refresh, _ := GenerateCode(clientKey, dbCode.UserId, true)
+	access, refresh, _ := generateToken(req.ClientId, dbCode.UserId, true)
 	expireAt := time.Now().Add(time.Hour * 24 * 7)
 	// 插入token
-	if err := s.dao.InsertAccessToken(ctx, access, refresh, dbCode.Scope, dbCode.ClientId, dbCode.UserId, expireAt); err != nil {
-		return nil, errno.ServerErr
+	err = s.dao.DB.Transaction(func(tx *gorm.DB) error {
+		accessToken := &model.OauthAccessToken{
+			ClientId:  dbCode.Id,
+			UserId:    dbCode.UserId,
+			Token:     access,
+			ExpiresAt: expireAt,
+			Scope:     dbCode.Scope,
+		}
+		err := s.dao.TxInsertAccessToken(tx, accessToken)
+		if err != nil {
+			return err
+		}
+		refershToken := &model.OauthRefreshToken{
+			ClientId:  dbCode.Id,
+			UserId:    dbCode.UserId,
+			Token:     refresh,
+			ExpiresAt: expireAt,
+			Scope:     dbCode.Scope,
+		}
+		err = s.dao.TxInsertRefreshToken(tx, refershToken)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
+	// todo: fix
 	// 删除code
-	if err := s.dao.DeleteCodeInfoByCode(ctx, code); err != nil {
+	if err = s.dao.DeleteCodeInfoByCode(ctx, req.Code); err != nil {
 		return nil, errno.ServerErr
 	}
-	reply := &model.AccessTokenReply{
+	rsp := &model.AccessTokenRsp{
 		AccessToken:  access,
 		ExpiresIn:    24 * 7 * 60,
 		RefreshToken: refresh,
 	}
-	return reply, nil
+	return rsp, nil
 }
 
-func GenerateCode(clientKey string, userId int, isGenRefresh bool) (string, string, error) {
+func generateToken(clientKey string, userId int, isGenRefresh bool) (string, string, error) {
+	var refreshToken string
 
 	buf := bytes.NewBufferString(clientKey)
 	buf.WriteString(strconv.Itoa(userId))
@@ -65,7 +92,6 @@ func GenerateCode(clientKey string, userId int, isGenRefresh bool) (string, stri
 	hash := md5.New()
 	hash.Write(buf.Bytes())
 	accessToken := hex.EncodeToString(hash.Sum(nil))
-	refreshToken := ""
 
 	if isGenRefresh {
 		buf.WriteString(uuid.Must(uuid.NewRandom()).String())
@@ -73,6 +99,5 @@ func GenerateCode(clientKey string, userId int, isGenRefresh bool) (string, stri
 		refreshHash.Write(buf.Bytes())
 		refreshToken = hex.EncodeToString(refreshHash.Sum(nil))
 	}
-
 	return accessToken, refreshToken, nil
 }

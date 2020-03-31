@@ -18,10 +18,6 @@ func main() {
 		panic(err)
 	}
 
-	//clients := server.InitClient(mysqlCli)
-
-	//oauthSrv := server.NewOauthServer( /*redisCli, */ clients)
-
 	srv := service.New(conf.Conf)
 
 	router.Init(conf.Conf, srv)

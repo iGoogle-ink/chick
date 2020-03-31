@@ -15,12 +15,12 @@ func token(c *gin.Context) {
 		web.JSON(c, nil, errno.RequestErr)
 		return
 	}
-	token, err := srv.GetAccessToken(c, req.ClientId, req.ClientSecret, req.Code, req.GrantType)
+	token, err := srv.GetAccessToken(c, req)
 	if err != nil {
 		web.JSON(c, nil, err)
 		return
 	}
-	web.JSON(c, token, errno.OK)
+	web.JSON(c, token, nil)
 }
 
 func refreshToken(c *gin.Context) {

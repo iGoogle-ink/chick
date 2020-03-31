@@ -2,9 +2,21 @@ package dao
 
 import (
 	"chick/app/account/oauth2/model"
+	"github.com/jinzhu/gorm"
+
 	"context"
 	"time"
 )
+
+func (d *Dao) TxInsertAccessToken(tx *gorm.DB, token *model.OauthAccessToken) error {
+
+	return nil
+}
+
+func (d *Dao) TxInsertRefreshToken(tx *gorm.DB, token *model.OauthRefreshToken) error {
+
+	return nil
+}
 
 func (d *Dao) InsertAccessToken(ctx context.Context, access, refersh, scope string, clientId, userId int, expiresAt time.Time) (err error) {
 	accessToken := &model.OauthAccessToken{
@@ -13,7 +25,6 @@ func (d *Dao) InsertAccessToken(ctx context.Context, access, refersh, scope stri
 		Token:     access,
 		ExpiresAt: expiresAt,
 		Scope:     scope,
-		IsDeleted: false,
 	}
 
 	if err := d.DB.Create(accessToken).Error; err != nil {
@@ -27,7 +38,6 @@ func (d *Dao) InsertAccessToken(ctx context.Context, access, refersh, scope stri
 		Token:     refersh,
 		ExpiresAt: expiresAt,
 		Scope:     scope,
-		IsDeleted: false,
 	}
 	if err := d.DB.Create(refershToken).Error; err != nil {
 		return err

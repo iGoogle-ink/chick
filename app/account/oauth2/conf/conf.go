@@ -22,9 +22,6 @@ type Config struct {
 	Redis *orm.Redis
 }
 
-func init() {
-}
-
 // 解析配置文件
 func Parse() error {
 

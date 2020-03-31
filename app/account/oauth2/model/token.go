@@ -6,13 +6,13 @@ import (
 
 type (
 	AccessTokenReq struct {
-		ClientId     string `json:"client_id" binding:"required"`
-		ClientSecret string `json:"client_secret" binding:"required"`
-		Code         string `json:"code" binding:"required"`
-		GrantType    string `json:"grant_type" binding:"required"`
+		ClientId     string `form:"client_id" json:"client_id" binding:"required"`
+		ClientSecret string `form:"client_secret" json:"client_secret" binding:"required"`
+		Code         string `form:"code" json:"code" binding:"required"`
+		GrantType    string `form:"grant_type" json:"grant_type" binding:"required"`
 	}
 
-	AccessTokenReply struct {
+	AccessTokenRsp struct {
 		AccessToken  string `json:"access_token"`
 		ExpiresIn    int    `json:"expires_in"`
 		RefreshToken string `json:"refresh_token"`
@@ -25,7 +25,7 @@ type (
 		Token     string
 		ExpiresAt time.Time
 		Scope     string
-		IsDeleted bool
+		IsDeleted int
 	}
 	OauthRefreshToken struct {
 		Id        int `gorm:"primary_key"`
@@ -34,7 +34,7 @@ type (
 		Token     string
 		ExpiresAt time.Time
 		Scope     string
-		IsDeleted bool
+		IsDeleted int
 	}
 )
 
