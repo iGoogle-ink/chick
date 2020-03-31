@@ -1,13 +1,9 @@
 package service
 
 import (
-	"context"
-
 	"chick/app/account/oauth2/conf"
 	"chick/app/account/oauth2/dao"
 )
-
-var ctx = context.Background()
 
 type Service struct {
 	dao *dao.Dao

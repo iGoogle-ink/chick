@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 // db table
 type (
 	OauthClient struct {
@@ -7,6 +9,8 @@ type (
 		Key         string
 		Secret      string
 		RedirectUri string
+		IsDeleted   int
+		Mtime       time.Time
 	}
 )
 

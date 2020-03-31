@@ -33,10 +33,11 @@ func initRoute(g *gin.Engine) {
 	{
 		oa := acc.Group("/oauth")
 		{
-			oa.GET("/authorize", authorize)
-			oa.GET("/login", login)
-			oa.POST("/token", token)
-			oa.POST("/refresh", refreshToken)
+			oa.Any("/authorize", authorize)   // 请求授权
+			oa.POST("/login", login)          // 授权登录
+			oa.POST("/register", register)    // 注册
+			oa.POST("/token", token)          // 换取AccessToken
+			oa.POST("/refresh", refreshToken) // 刷新AccessToken
 		}
 		html := acc.Group("/static")
 		{
@@ -51,7 +52,7 @@ func ping(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Pong"})
 }
 
-func getUserId(session string) (id int) {
+func checkAndGetUserId(session string) (id int) {
 
 	return 1
 }

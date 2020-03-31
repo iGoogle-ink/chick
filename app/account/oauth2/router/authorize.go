@@ -16,6 +16,7 @@ func authorize(c *gin.Context) {
 	// 用户未登录，跳转到登录页面
 	session, _ := c.Cookie("session")
 	fmt.Println("session:", session)
+
 	if session == "" {
 		params := query.Encode()
 		loginUrl, _ := url.Parse("http://localhost:8082/account/static/login")
@@ -25,7 +26,7 @@ func authorize(c *gin.Context) {
 		return
 	}
 	// 已登录，获取用户id
-	userId := getUserId(session)
+	userId := checkAndGetUserId(session)
 
 	req := new(model.AuthorizeReq)
 	err := c.ShouldBind(req)
@@ -34,7 +35,7 @@ func authorize(c *gin.Context) {
 		return
 	}
 	fmt.Println("req:", req)
-	locationUrl, err := srv.Authorize(userId, req.ClientKey, req.ResponseType, req.RedirectUri, req.Scope, req.State)
+	locationUrl, err := srv.Authorize(c, userId, req.ClientKey, req.ResponseType, req.RedirectUri, req.Scope, req.State)
 	if err != nil {
 		web.JSON(c, nil, err)
 		return

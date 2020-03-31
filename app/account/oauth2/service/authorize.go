@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"crypto/md5"
 	"encoding/hex"
 	"log"
@@ -12,7 +13,7 @@ import (
 )
 
 // Authorize
-func (s *Service) Authorize(userId int, clientKey, rspType, redUri, scope, state string) (locationUrl string, err error) {
+func (s *Service) Authorize(ctx context.Context, userId int, clientKey, rspType, redUri, scope, state string) (locationUrl string, err error) {
 	if rspType != "code" {
 		return "", errno.RequestErr
 	}

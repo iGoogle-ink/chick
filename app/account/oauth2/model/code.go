@@ -11,6 +11,8 @@ type (
 		RedirectUri string
 		ExpiresAt   time.Time
 		Scope       string
+		IsDeleted   int
+		Mtime       time.Time
 	}
 )
 

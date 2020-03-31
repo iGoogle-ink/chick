@@ -14,9 +14,9 @@ func InitRedisCluster(c *Redis) (r *redis.ClusterClient) {
 		Addrs:    c.Addr,
 		Password: c.Password,
 	})
-	_, err := r.Ping().Result()
-	if err != nil {
-		panic(err)
-	}
+	//_, err := r.Ping().Result()
+	//if err != nil {
+	//	panic(err)
+	//}
 	return r
 }
