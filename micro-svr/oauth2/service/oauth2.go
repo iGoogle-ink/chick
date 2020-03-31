@@ -6,7 +6,7 @@ import (
 	"chick/api/oauth2"
 )
 
-// AccessToken 获取 access token
+// InsertAccessToken 获取 access token
 func (s *Service) AccessToken(ctx context.Context, in *oauth2.AccessTokenReq, out *oauth2.AccessTokenReply) (err error) {
 	// todo: get user openid
 

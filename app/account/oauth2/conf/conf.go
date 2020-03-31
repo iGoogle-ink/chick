@@ -1,9 +1,8 @@
 package conf
 
 import (
-	"flag"
-
 	"chick/pkg/orm"
+	"os"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
@@ -24,13 +23,13 @@ type Config struct {
 }
 
 func init() {
-	flag.StringVar(&env, "env", "", "env or prod")
-	flag.StringVar(&filePath, "conf", "", "conf file path")
 }
 
 // 解析配置文件
 func Parse() error {
-	flag.Parse()
+
+	env := os.Getenv("OAUTH_ENV")
+	filePath := os.Getenv("OAUTH_CONF")
 	if filePath == "" {
 		return errors.New("load conf path fail")
 	}

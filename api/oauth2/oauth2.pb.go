@@ -76,7 +76,7 @@ func (m *AccessTokenReq) GetCode() string {
 }
 
 type AccessTokenReply struct {
-	AccessToken          string   `protobuf:"bytes,1,opt,name=AccessToken,proto3" json:"AccessToken,omitempty"`
+	AccessToken          string   `protobuf:"bytes,1,opt,name=InsertAccessToken,proto3" json:"InsertAccessToken,omitempty"`
 	ExpiresIn            string   `protobuf:"bytes,2,opt,name=ExpiresIn,proto3" json:"ExpiresIn,omitempty"`
 	RefreshToken         string   `protobuf:"bytes,3,opt,name=RefreshToken,proto3" json:"RefreshToken,omitempty"`
 	Openid               string   `protobuf:"bytes,4,opt,name=Openid,proto3" json:"Openid,omitempty"`
@@ -139,7 +139,7 @@ func (m *AccessTokenReply) GetOpenid() string {
 }
 
 type VerifyTokenReq struct {
-	AccessToken          string   `protobuf:"bytes,1,opt,name=AccessToken,proto3" json:"AccessToken,omitempty"`
+	AccessToken          string   `protobuf:"bytes,1,opt,name=InsertAccessToken,proto3" json:"InsertAccessToken,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -272,7 +272,7 @@ func (m *RefreshTokenReq) GetRefreshToken() string {
 }
 
 type RefreshTokenReply struct {
-	AccessToken          string   `protobuf:"bytes,1,opt,name=AccessToken,proto3" json:"AccessToken,omitempty"`
+	AccessToken          string   `protobuf:"bytes,1,opt,name=InsertAccessToken,proto3" json:"InsertAccessToken,omitempty"`
 	ExpiresIn            string   `protobuf:"bytes,2,opt,name=ExpiresIn,proto3" json:"ExpiresIn,omitempty"`
 	RefreshToken         string   `protobuf:"bytes,3,opt,name=RefreshToken,proto3" json:"RefreshToken,omitempty"`
 	Openid               string   `protobuf:"bytes,4,opt,name=Openid,proto3" json:"Openid,omitempty"`
@@ -335,7 +335,7 @@ func (m *RefreshTokenReply) GetOpenid() string {
 }
 
 type RemoveTokenReq struct {
-	AccessToken          string   `protobuf:"bytes,1,opt,name=AccessToken,proto3" json:"AccessToken,omitempty"`
+	AccessToken          string   `protobuf:"bytes,1,opt,name=InsertAccessToken,proto3" json:"InsertAccessToken,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`

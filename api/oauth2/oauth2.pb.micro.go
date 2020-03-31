@@ -57,7 +57,7 @@ func NewOauth2Service(name string, c client.Client) Oauth2Service {
 }
 
 func (c *oauth2Service) AccessToken(ctx context.Context, in *AccessTokenReq, opts ...client.CallOption) (*AccessTokenReply, error) {
-	req := c.c.NewRequest(c.name, "Oauth2.AccessToken", in)
+	req := c.c.NewRequest(c.name, "Oauth2.InsertAccessToken", in)
 	out := new(AccessTokenReply)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {

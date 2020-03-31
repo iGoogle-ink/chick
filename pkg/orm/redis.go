@@ -1,6 +1,8 @@
 package orm
 
-import "github.com/go-redis/redis/v7"
+import (
+	"github.com/go-redis/redis/v7"
+)
 
 // Redis redis config.
 type Redis struct {
