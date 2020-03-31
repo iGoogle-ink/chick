@@ -49,8 +49,7 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 			ExpiresAt: expireAt,
 			Scope:     dbCode.Scope,
 		}
-		err := s.dao.TxInsertAccessToken(tx, accessToken)
-		if err != nil {
+		if err := s.dao.TxInsertAccessToken(ctx, tx, accessToken); err != nil {
 			return err
 		}
 		// 插入refresh_token
@@ -61,12 +60,11 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 			ExpiresAt: expireAt,
 			Scope:     dbCode.Scope,
 		}
-		err = s.dao.TxInsertRefreshToken(tx, refreshToken)
-		if err != nil {
+		if err := s.dao.TxInsertRefreshToken(ctx, tx, refreshToken); err != nil {
 			return err
 		}
 		// 删除code
-		if err = s.dao.DeleteCodeInfoByCode(ctx, req.Code); err != nil {
+		if err := s.dao.DeleteCodeInfoByCode(ctx, tx, req.Code); err != nil {
 			return err
 		}
 		return nil

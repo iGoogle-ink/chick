@@ -3,6 +3,8 @@ package dao
 import (
 	"context"
 
+	"github.com/jinzhu/gorm"
+
 	"chick/app/account/oauth2/model"
 )
 
@@ -15,11 +17,6 @@ func (d *Dao) GetCodeInfoByCode(ctx context.Context, code string) (*model.OauthA
 	return dbCode, nil
 }
 
-func (d *Dao) DeleteCodeInfoByCode(ctx context.Context, code string) error {
-	return d.DB.Table("oauth_auth_code").Where("code = ?", code).
-		Updates(map[string]int{"is_deleted": 1}).Error
-}
-
 func (d *Dao) CheckClientInfo(ctx context.Context, clientId int, clientKey string, clientSecret string) (bool, error) {
 
 	clientInfo := &model.OauthClient{}
@@ -27,4 +24,9 @@ func (d *Dao) CheckClientInfo(ctx context.Context, clientId int, clientKey strin
 		return false, err
 	}
 	return clientKey == clientInfo.Key && clientSecret == clientInfo.Secret, nil
+}
+
+func (d *Dao) DeleteCodeInfoByCode(ctx context.Context, tx *gorm.DB, code string) error {
+	return tx.Table("oauth_auth_code").Where("code = ?", code).
+		Updates(map[string]int{"is_deleted": 1}).Error
 }
