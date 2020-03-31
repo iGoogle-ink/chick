@@ -9,17 +9,16 @@ import (
 )
 
 var (
-	env      string
-	filePath string
-	Conf     = &Config{}
+	Conf = &Config{}
 )
 
 type Config struct {
-	Name  string
-	Port  string
-	Addrs []string
-	MySQL *orm.MySQL
-	Redis *orm.Redis
+	Name           string
+	Port           string
+	Addrs          []string
+	TokenExpiresIn int //单位:秒
+	MySQL          *orm.MySQL
+	Redis          *orm.Redis
 }
 
 // 解析配置文件

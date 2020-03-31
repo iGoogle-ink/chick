@@ -24,5 +24,16 @@ func token(c *gin.Context) {
 }
 
 func refreshToken(c *gin.Context) {
-
+	req := model.OauthRefreshTokenReq{}
+	err := c.ShouldBind(&req)
+	if err != nil {
+		web.JSON(c, nil, errno.RequestErr)
+		return
+	}
+	token, err := srv.GetNewToken(c, &req)
+	if err != nil {
+		web.JSON(c, nil, err)
+		return
+	}
+	web.JSON(c, token, nil)
 }

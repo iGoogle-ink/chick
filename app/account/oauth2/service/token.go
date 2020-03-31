@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"chick/app/account/oauth2/conf"
 	"context"
 	"crypto/md5"
 	"encoding/hex"
@@ -38,7 +39,7 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 
 	// 生成token
 	access, refresh, _ := generateToken(req.ClientId, dbCode.UserId, true)
-	expireAt := time.Now().Add(time.Hour * 24 * 7)
+	expireAt := time.Now().Add(time.Second * time.Duration(conf.Conf.TokenExpiresIn))
 
 	err = s.dao.DB.Transaction(func(tx *gorm.DB) error {
 		// 插入access_token
@@ -75,9 +76,57 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 
 	rsp := &model.AccessTokenRsp{
 		AccessToken:  access,
-		ExpiresIn:    24 * 7 * 60,
+		ExpiresIn:    conf.Conf.TokenExpiresIn,
 		RefreshToken: refresh,
 	}
+	return rsp, nil
+}
+
+func (s *Service) GetNewToken(ctx context.Context, req *model.OauthRefreshTokenReq) (*model.AccessTokenRsp, error) {
+	refreshTokenInfo, ok := s.dao.GetRefreshToken(ctx, req)
+	if !ok {
+		return nil, errno.InvalidRefreshToken
+	}
+	access, refresh, _ := generateToken(req.ClientId, refreshTokenInfo.UserId, true)
+	expireAt := time.Now().Add(time.Second * time.Duration(conf.Conf.TokenExpiresIn))
+	if err := s.dao.DB.Transaction(func(tx *gorm.DB) error {
+		// 插入access_token
+		accessToken := &model.OauthAccessToken{
+			ClientId:  refreshTokenInfo.ClientId,
+			UserId:    refreshTokenInfo.UserId,
+			Token:     access,
+			ExpiresAt: expireAt,
+			Scope:     refreshTokenInfo.Scope,
+		}
+		if err := s.dao.TxInsertAccessToken(ctx, tx, accessToken); err != nil {
+			return err
+		}
+		// 插入refresh_token
+		refreshToken := &model.OauthRefreshToken{
+			ClientId:  refreshTokenInfo.ClientId,
+			UserId:    refreshTokenInfo.UserId,
+			Token:     refresh,
+			ExpiresAt: expireAt,
+			Scope:     refreshTokenInfo.Scope,
+		}
+		if err := s.dao.TxInsertRefreshToken(ctx, tx, refreshToken); err != nil {
+			return err
+		}
+
+		// 软删除refreshToken
+		if err := s.dao.TxDeleteRefreshToken(ctx, tx, refreshTokenInfo); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+	rsp := &model.AccessTokenRsp{
+		AccessToken:  access,
+		ExpiresIn:    conf.Conf.TokenExpiresIn,
+		RefreshToken: refresh,
+	}
+
 	return rsp, nil
 }
 

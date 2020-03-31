@@ -16,6 +16,7 @@ type (
 		AccessToken  string `json:"access_token"`
 		ExpiresIn    int    `json:"expires_in"`
 		RefreshToken string `json:"refresh_token"`
+		OpenId       string `json:"open_id"`
 	}
 
 	OauthAccessToken struct {
@@ -35,6 +36,12 @@ type (
 		ExpiresAt time.Time
 		Scope     string
 		IsDeleted int
+	}
+
+	OauthRefreshTokenReq struct {
+		ClientId     string `form:"client_id" json:"client_id"`
+		GrantType    string `form:"grant_type" json:"grant_type"`
+		RefreshToken string `form:"refresh_token" json:"refresh_token"`
 	}
 )
 

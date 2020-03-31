@@ -19,7 +19,8 @@
     "NSQ": {
       "Topic": "test_topic",
       "Channel": "test_channel"
-    }
+    },
+    "TokenExpiresIn": 604800
   },
   "test": {
     "Name": "micro.service.oauth2",
@@ -41,6 +42,7 @@
     "NSQ": {
       "Topic": "test_topic",
       "Channel": "test_channel"
-    }
+    },
+    "TokenExpiresIn": 604800
   }
 }
