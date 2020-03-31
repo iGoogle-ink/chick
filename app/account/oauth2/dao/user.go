@@ -18,7 +18,7 @@ func (d *Dao) CloudUserInfo(ctx context.Context, uname string) (user *model.Clou
 }
 
 func (d *Dao) InsertCloudUser(ctx context.Context, user *model.CloudUser) (id int, err error) {
-	err = d.DB.Create(user).Error
+	err = d.DB.Select([]string{"uname", "passwd", "phone"}).Create(user).Error
 	if err != nil {
 		return -1, nil
 	}

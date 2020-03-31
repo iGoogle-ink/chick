@@ -39,8 +39,9 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 	// 生成token
 	access, refresh, _ := generateToken(req.ClientId, dbCode.UserId, true)
 	expireAt := time.Now().Add(time.Hour * 24 * 7)
-	// 插入token
+
 	err = s.dao.DB.Transaction(func(tx *gorm.DB) error {
+		// 插入access_token
 		accessToken := &model.OauthAccessToken{
 			ClientId:  dbCode.Id,
 			UserId:    dbCode.UserId,
@@ -52,15 +53,20 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 		if err != nil {
 			return err
 		}
-		refershToken := &model.OauthRefreshToken{
+		// 插入refresh_token
+		refreshToken := &model.OauthRefreshToken{
 			ClientId:  dbCode.Id,
 			UserId:    dbCode.UserId,
 			Token:     refresh,
 			ExpiresAt: expireAt,
 			Scope:     dbCode.Scope,
 		}
-		err = s.dao.TxInsertRefreshToken(tx, refershToken)
+		err = s.dao.TxInsertRefreshToken(tx, refreshToken)
 		if err != nil {
+			return err
+		}
+		// 删除code
+		if err = s.dao.DeleteCodeInfoByCode(ctx, req.Code); err != nil {
 			return err
 		}
 		return nil
@@ -68,11 +74,7 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 	if err != nil {
 		return nil, err
 	}
-	// todo: fix
-	// 删除code
-	if err = s.dao.DeleteCodeInfoByCode(ctx, req.Code); err != nil {
-		return nil, errno.ServerErr
-	}
+
 	rsp := &model.AccessTokenRsp{
 		AccessToken:  access,
 		ExpiresIn:    24 * 7 * 60,
