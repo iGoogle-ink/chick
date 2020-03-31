@@ -10,6 +10,7 @@ import (
 
 	"chick/app/account/oauth2/model"
 	"chick/errno"
+	xtime "chick/pkg/time"
 )
 
 // Authorize
@@ -31,11 +32,11 @@ func (s *Service) Authorize(ctx context.Context, userId int, clientKey, rspType,
 		UserId:      userId,
 		Code:        code,
 		RedirectUri: redUri,
-		ExpiresAt:   time.Now().Add(time.Duration(5) * time.Minute),
+		ExpiresAt:   xtime.Time(time.Now().Add(time.Duration(5) * time.Minute).Unix()),
 		Scope:       scope,
 	}
 	// code 写入数据库
-	err = s.dao.InsertAuthorizationCode(ctx, codeInsert)
+	err = s.dao.InsertCode(ctx, codeInsert)
 	if err != nil {
 		return "", errno.New(-2, "生成Code失败")
 	}

@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	xtime "chick/pkg/time"
+)
 
 // db table
 type (
@@ -10,7 +12,7 @@ type (
 		Secret      string
 		RedirectUri string
 		IsDeleted   int
-		Mtime       time.Time
+		Mtime       xtime.Time
 	}
 )
 

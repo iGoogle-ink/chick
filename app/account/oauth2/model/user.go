@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	xtime "chick/pkg/time"
+)
 
 type (
 	CloudUser struct {
@@ -9,7 +11,7 @@ type (
 		Passwd    string
 		Phone     string
 		IsDeleted int
-		Mtime     time.Time
+		Mtime     xtime.Time
 	}
 )
 
@@ -23,13 +25,15 @@ func (m *CloudUser) CopyFrom(req *RegisterReq) {
 	m.Phone = req.Phone
 }
 
-type RegisterReq struct {
-	Uname  string `form:"uname" json:"uname"`
-	Passwd string `form:"passwd" json:"passwd"`
-	Phone  string `form:"phone" json:"phone"`
-}
+type (
+	RegisterReq struct {
+		Uname  string `form:"uname" json:"uname"`
+		Passwd string `form:"passwd" json:"passwd"`
+		Phone  string `form:"phone" json:"phone"`
+	}
 
-type LoginReq struct {
-	Uname  string `form:"uname" json:"uname"`
-	Passwd string `form:"passwd" json:"passwd"`
-}
+	LoginReq struct {
+		Uname  string `form:"uname" json:"uname"`
+		Passwd string `form:"passwd" json:"passwd"`
+	}
+)

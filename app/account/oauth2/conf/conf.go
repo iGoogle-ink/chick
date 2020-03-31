@@ -1,8 +1,9 @@
 package conf
 
 import (
-	"chick/pkg/orm"
 	"os"
+
+	"chick/pkg/orm"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
@@ -23,7 +24,6 @@ type Config struct {
 
 // 解析配置文件
 func Parse() error {
-
 	env := os.Getenv("OAUTH_ENV")
 	filePath := os.Getenv("OAUTH_CONF")
 	if filePath == "" {

@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	xtime "chick/pkg/time"
+)
 
 type (
 	OauthAuthCode struct {
@@ -9,10 +11,10 @@ type (
 		UserId      int
 		Code        string
 		RedirectUri string
-		ExpiresAt   time.Time
+		ExpiresAt   xtime.Time
 		Scope       string
 		IsDeleted   int
-		Mtime       time.Time
+		Mtime       xtime.Time
 	}
 )
 

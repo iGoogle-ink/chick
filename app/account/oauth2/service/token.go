@@ -2,15 +2,16 @@ package service
 
 import (
 	"bytes"
-	"chick/app/account/oauth2/conf"
 	"context"
 	"crypto/md5"
 	"encoding/hex"
 	"strconv"
 	"time"
 
+	"chick/app/account/oauth2/conf"
 	"chick/app/account/oauth2/model"
 	"chick/errno"
+	xtime "chick/pkg/time"
 
 	"github.com/jinzhu/gorm"
 	"gopkg.in/oauth2.v3/utils/uuid"
@@ -25,7 +26,8 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 		return nil, errno.InvalidCode
 	}
 	//校验code 过期
-	if dbCode.ExpiresAt.Before(time.Now()) {
+
+	if dbCode.ExpiresAt.Time().Before(time.Now()) {
 		return nil, errno.CodeExpired
 	}
 	// 校验 client_key, client_secret
@@ -39,7 +41,7 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 
 	// 生成token
 	access, refresh, _ := generateToken(req.ClientId, dbCode.UserId, true)
-	expireAt := time.Now().Add(time.Second * time.Duration(conf.Conf.TokenExpiresIn))
+	expireAt := xtime.Time(time.Now().Add(time.Second * time.Duration(conf.Conf.TokenExpiresIn)).Unix())
 
 	err = s.dao.DB.Transaction(func(tx *gorm.DB) error {
 		// 插入access_token
@@ -88,7 +90,7 @@ func (s *Service) GetNewToken(ctx context.Context, req *model.OauthRefreshTokenR
 		return nil, errno.InvalidRefreshToken
 	}
 	access, refresh, _ := generateToken(req.ClientId, refreshTokenInfo.UserId, true)
-	expireAt := time.Now().Add(time.Second * time.Duration(conf.Conf.TokenExpiresIn))
+	expireAt := xtime.Time(time.Now().Add(time.Second * time.Duration(conf.Conf.TokenExpiresIn)).Unix())
 	if err := s.dao.DB.Transaction(func(tx *gorm.DB) error {
 		// 插入access_token
 		accessToken := &model.OauthAccessToken{
