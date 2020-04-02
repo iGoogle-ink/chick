@@ -33,7 +33,8 @@ func initRoute(g *gin.Engine) {
 	{
 		oa := acc.Group("/oauth")
 		{
-			oa.Any("/authorize", authorize)   // 请求授权
+			oa.GET("/authorize", authorize)   // 请求授权
+			oa.POST("/authorize", authorize)  // 请求授权
 			oa.POST("/login", login)          // 授权登录
 			oa.POST("/register", register)    // 注册
 			oa.POST("/token", token)          // 换取AccessToken
