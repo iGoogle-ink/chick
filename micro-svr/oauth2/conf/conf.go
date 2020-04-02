@@ -3,9 +3,8 @@ package conf
 import (
 	"os"
 
+	"chick/pkg/config"
 	"chick/pkg/orm"
-	"chick/pkg/store"
-
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
@@ -15,11 +14,12 @@ var (
 )
 
 type Config struct {
-	Addrs   []string
-	MySQL   *orm.MySQL
-	Redis   *orm.Redis
-	Clients []*store.ClientInfo
-	Name    string
+	Name        string
+	Registry    *config.Registry
+	Broker      *config.Broker
+	MySQL       *orm.MySQL
+	Redis       *orm.Redis
+	OauthClient []*config.OauthClient
 }
 
 func init() {

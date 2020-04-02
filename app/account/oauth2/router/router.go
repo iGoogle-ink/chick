@@ -17,7 +17,7 @@ var (
 func Init(c *conf.Config, s *service.Service) {
 	srv = s
 
-	g := web.InitServer(c.Port)
+	g := web.InitServer(c.HttpPort)
 
 	g.Gin.LoadHTMLGlob("static/*")
 

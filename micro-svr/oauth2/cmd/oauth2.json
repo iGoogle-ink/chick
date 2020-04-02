@@ -1,11 +1,32 @@
 {
   "prod": {
     "Name": "micro.service.oauth2",
-    "Addrs": [
-      "127.0.0.1:2379"
-    ],
+    "Registry": {
+      "Etcd": {
+        "Addrs": [
+          "127.0.0.1:2379"
+        ]
+      }
+    },
+    "Broker": {
+      "Nsq": {
+        "Addrs": [
+          "127.0.0.1:1234"
+        ],
+        "Topic": "test_topic",
+        "Channel": "test_channel"
+      },
+      "Kafka": {
+        "Addrs": [
+          "127.0.0.1:1234"
+        ],
+        "Topic": "test_topic"
+      }
+    },
     "Redis": {
-      "Addr": "120.0.0.1:1001",
+      "Addrs": [
+        "120.0.0.1:1001"
+      ],
       "Password": "",
       "DB": 0
     },
@@ -16,7 +37,7 @@
       "IdleTimeout": 5,
       "ShowSQL": false
     },
-    "Clients": [
+    "OauthClient": [
       {
         "Id": "la4rDuxPhBoIDyAq",
         "Name": "11",
@@ -27,17 +48,32 @@
         "Name": "22",
         "Secret": "222"
       }
-    ],
-    "NSQ": {
-      "Topic": "topic",
-      "Channel": "channel"
-    }
+    ]
   },
   "test": {
     "Name": "micro.service.oauth2",
-    "Addrs": [
-      "127.0.0.1:2379"
-    ],
+    "Registry": {
+      "Etcd": {
+        "Addrs": [
+          "127.0.0.1:2379"
+        ]
+      }
+    },
+    "Broker": {
+      "Nsq": {
+        "Addrs": [
+          "127.0.0.1:1234"
+        ],
+        "Topic": "test_topic",
+        "Channel": "test_channel"
+      },
+      "Kafka": {
+        "Addrs": [
+          "127.0.0.1:1234"
+        ],
+        "Topic": "test_topic"
+      }
+    },
     "Redis": {
       "Addrs": [
         "120.0.0.1:1001"
@@ -52,9 +88,17 @@
       "IdleTimeout": 5,
       "ShowSQL": false
     },
-    "NSQ": {
-      "Topic": "test_topic",
-      "Channel": "test_channel"
-    }
+    "OauthClient": [
+      {
+        "Id": "la4rDuxPhBoIDyAq",
+        "Name": "11",
+        "Secret": "GJQishYkUAQhKUOvYIfpnytbagATZI4L"
+      },
+      {
+        "Id": "2",
+        "Name": "22",
+        "Secret": "222"
+      }
+    ]
   }
 }

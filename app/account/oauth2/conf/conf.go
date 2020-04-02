@@ -3,6 +3,7 @@ package conf
 import (
 	"os"
 
+	"chick/pkg/config"
 	"chick/pkg/orm"
 
 	"github.com/pkg/errors"
@@ -15,9 +16,10 @@ var (
 
 type Config struct {
 	Name           string
-	Port           string
-	Addrs          []string
+	HttpPort       string
 	TokenExpiresIn int // 单位:秒
+	Registry       *config.Registry
+	Broker         *config.Broker
 	MySQL          *orm.MySQL
 	Redis          *orm.Redis
 }

@@ -3,6 +3,7 @@ package conf
 import (
 	"flag"
 
+	"chick/pkg/config"
 	"chick/pkg/orm"
 
 	"github.com/pkg/errors"
@@ -16,11 +17,12 @@ var (
 )
 
 type Config struct {
-	Name  string
-	Port  string
-	Addrs []string
-	MySQL *orm.MySQL
-	Redis *orm.Redis
+	Name     string
+	HttpPort string
+	Registry *config.Registry
+	Broker   *config.Broker
+	MySQL    *orm.MySQL
+	Redis    *orm.Redis
 }
 
 func init() {

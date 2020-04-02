@@ -2,9 +2,8 @@ package dao
 
 import (
 	"chick/micro-svr/oauth2/conf"
+	"chick/pkg/config"
 	"chick/pkg/orm"
-	xStore "chick/pkg/store"
-
 	"gopkg.in/oauth2.v3/models"
 
 	"github.com/go-redis/redis/v7"
@@ -26,7 +25,7 @@ func New(c *conf.Config) (d *Dao) {
 	d = &Dao{
 		DB:        orm.InitMySQL(c.MySQL),
 		redisCli:  r,
-		oauth2Svr: newOauth2Dao(c.Clients),
+		oauth2Svr: newOauth2Dao(c.OauthClient),
 	}
 	return
 }
@@ -37,7 +36,7 @@ func (d *Dao) Close() {
 	}
 }
 
-func newOauth2Dao(clients []*xStore.ClientInfo /* redisCli *redis.ClusterClient*/) *server.Server {
+func newOauth2Dao(clients []*config.OauthClient /* redisCli *redis.ClusterClient*/) *server.Server {
 	mgr := manage.NewDefaultManager()
 
 	//mgr.MustTokenStorage(xStore.NewRedisClusterStoreWithCli(redisCli), nil)

@@ -7,13 +7,17 @@ import (
 	"chick/api/oauth2"
 	"chick/app/account/oauth2/conf"
 	"chick/pkg/orm"
+
+	"github.com/go-redis/redis/v7"
+	"github.com/jinzhu/gorm"
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/client"
 	"github.com/micro/go-micro/v2/registry"
 	"github.com/micro/go-micro/v2/registry/etcd"
+)
 
-	"github.com/go-redis/redis/v7"
-	"github.com/jinzhu/gorm"
+const (
+	ServiceOauth2 = "micro.service.oauth2"
 )
 
 type Dao struct {
@@ -26,7 +30,7 @@ func New(c *conf.Config) (d *Dao) {
 	d = &Dao{
 		DB:        orm.InitMySQL(c.MySQL),
 		redis:     orm.InitRedisCluster(c.Redis),
-		oauthGrpc: initOauthGrpc(),
+		oauthGrpc: initOauthGrpc(c),
 	}
 	return d
 }
@@ -37,17 +41,17 @@ func (d *Dao) Close() {
 	}
 }
 
-func initOauthGrpc() oauth2.Oauth2Service {
+func initOauthGrpc(c *conf.Config) oauth2.Oauth2Service {
 	etcdRegistry := etcd.NewRegistry(func(options *registry.Options) {
-		options.Addrs = []string{"127.0.0.1:2379"}
+		options.Addrs = c.Registry.Etcd.Addrs
 	})
 	service := micro.NewService(
-		micro.Name("app.account.oauth2"),
+		micro.Name(c.Name),
 		micro.Registry(etcdRegistry),
 		micro.WrapClient(logWrap),
 	)
 	service.Init()
-	return oauth2.NewOauth2Service("micro.service.oauth2", service.Client())
+	return oauth2.NewOauth2Service(ServiceOauth2, service.Client())
 }
 func logWrap(c client.Client) client.Client {
 	return &logWrapper{c}

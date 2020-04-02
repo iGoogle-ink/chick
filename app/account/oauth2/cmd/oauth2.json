@@ -1,7 +1,29 @@
 {
   "prod": {
-    "Name": "micro.service.oauth2",
-    "Port": ":2233",
+    "Name": "app.account.oauth2",
+    "HttpPort": ":2233",
+    "Registry": {
+      "Etcd": {
+        "Addrs": [
+          "127.0.0.1:2379"
+        ]
+      }
+    },
+    "Broker": {
+      "Nsq": {
+        "Addrs": [
+          "127.0.0.1:1234"
+        ],
+        "Topic": "test_topic",
+        "Channel": "test_channel"
+      },
+      "Kafka": {
+        "Addrs": [
+          "127.0.0.1:1234"
+        ],
+        "Topic": "test_topic"
+      }
+    },
     "Redis": {
       "Addrs": [
         "120.0.0.1:1001"
@@ -16,15 +38,33 @@
       "IdleTimeout": 5,
       "ShowSQL": false
     },
-    "NSQ": {
-      "Topic": "test_topic",
-      "Channel": "test_channel"
-    },
     "TokenExpiresIn": 604800
   },
   "test": {
-    "Name": "micro.service.oauth2",
-    "Port": ":8082",
+    "Name": "app.account.oauth2",
+    "HttpPort": ":2233",
+    "Registry": {
+      "Etcd": {
+        "Addrs": [
+          "127.0.0.1:2379"
+        ]
+      }
+    },
+    "Broker": {
+      "Nsq": {
+        "Addrs": [
+          "127.0.0.1:1234"
+        ],
+        "Topic": "test_topic",
+        "Channel": "test_channel"
+      },
+      "Kafka": {
+        "Addrs": [
+          "127.0.0.1:1234"
+        ],
+        "Topic": "test_topic"
+      }
+    },
     "Redis": {
       "Addrs": [
         "120.0.0.1:1001"
@@ -38,10 +78,6 @@
       "Idle": 10,
       "IdleTimeout": 5,
       "ShowSQL": false
-    },
-    "NSQ": {
-      "Topic": "test_topic",
-      "Channel": "test_channel"
     },
     "TokenExpiresIn": 604800
   }
