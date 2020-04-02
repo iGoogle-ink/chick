@@ -1,6 +1,9 @@
 {
   "prod": {
     "Name": "micro.service.oauth2",
+    "Addrs": [
+      "127.0.0.1:2379"
+    ],
     "Redis": {
       "Addr": "120.0.0.1:1001",
       "Password": "",
@@ -15,9 +18,9 @@
     },
     "Clients": [
       {
-        "Id": "1",
+        "Id": "la4rDuxPhBoIDyAq",
         "Name": "11",
-        "Secret": "111"
+        "Secret": "GJQishYkUAQhKUOvYIfpnytbagATZI4L"
       },
       {
         "Id": "2",
@@ -32,6 +35,9 @@
   },
   "test": {
     "Name": "micro.service.oauth2",
+    "Addrs": [
+      "127.0.0.1:2379"
+    ],
     "Redis": {
       "Addrs": [
         "120.0.0.1:1001"

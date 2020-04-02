@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
+	"log"
 	"strconv"
 	"time"
 
@@ -16,6 +17,22 @@ import (
 	"github.com/jinzhu/gorm"
 	"gopkg.in/oauth2.v3/utils/uuid"
 )
+
+func (s *Service) GRPCAccessToken(ctx context.Context) {
+	var (
+		key    = "la4rDuxPhBoIDyAq"
+		secret = "GJQishYkUAQhKUOvYIfpnytbagATZI4L"
+		code   = "a92a1382899bef688549b3a8244a2b0d"
+	)
+	token, err := s.dao.GRPCAccessToken(ctx, key, secret, code)
+	if err != nil {
+		log.Println("s.dao.GRPCAccessToken:", err)
+		return
+	}
+	log.Println("token.AccessToken:", token.AccessToken)
+	log.Println("token.RefreshToken:", token.RefreshToken)
+	log.Println("token.ExpiresIn:", token.ExpiresIn)
+}
 
 // GetAccessToken
 func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq) (*model.AccessTokenRsp, error) {

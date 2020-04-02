@@ -70,7 +70,6 @@ service Oauth2 {
     }
     // 获取Code
     rpc AuthorizationCode (AuthorizationCodeReq) returns (AuthorizationCodeReply) {
-
     }
 }
 

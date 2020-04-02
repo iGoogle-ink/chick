@@ -1,12 +1,27 @@
 package dao
 
 import (
-	"chick/app/account/oauth2/model"
 	"context"
 	"time"
 
+	"chick/api/oauth2"
+	"chick/app/account/oauth2/model"
+
 	"github.com/jinzhu/gorm"
 )
+
+func (d *Dao) GRPCAccessToken(ctx context.Context, key, secret, code string) (reply *oauth2.AccessTokenReply, err error) {
+	req := &oauth2.AccessTokenReq{
+		ClientId:     key,
+		ClientSecret: secret,
+		Code:         code,
+	}
+	token, err := d.oauthGrpc.AccessToken(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return token, nil
+}
 
 func (d *Dao) TxInsertAccessToken(ctx context.Context, tx *gorm.DB, token *model.OauthAccessToken) error {
 	return tx.Create(token).Error

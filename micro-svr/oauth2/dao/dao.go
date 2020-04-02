@@ -26,7 +26,7 @@ func New(c *conf.Config) (d *Dao) {
 	d = &Dao{
 		DB:        orm.InitMySQL(c.MySQL),
 		redisCli:  r,
-		oauth2Svr: newOauth2Dao(c.Clients, r),
+		oauth2Svr: newOauth2Dao(c.Clients),
 	}
 	return
 }
@@ -37,10 +37,11 @@ func (d *Dao) Close() {
 	}
 }
 
-func newOauth2Dao(clients []*xStore.ClientInfo, redisCli *redis.ClusterClient) *server.Server {
+func newOauth2Dao(clients []*xStore.ClientInfo /* redisCli *redis.ClusterClient*/) *server.Server {
 	mgr := manage.NewDefaultManager()
 
-	mgr.MustTokenStorage(xStore.NewRedisClusterStoreWithCli(redisCli), nil)
+	//mgr.MustTokenStorage(xStore.NewRedisClusterStoreWithCli(redisCli), nil)
+	mgr.MustTokenStorage(store.NewMemoryTokenStore())
 
 	clientStore := store.NewClientStore()
 

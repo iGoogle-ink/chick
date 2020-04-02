@@ -1,7 +1,7 @@
 {
   "prod": {
     "Name": "micro.service.oauth2",
-    "Port": ":8082",
+    "Port": ":2233",
     "Redis": {
       "Addrs": [
         "120.0.0.1:1001"

@@ -49,6 +49,7 @@ func initRoute(g *gin.Engine) {
 }
 
 func ping(c *gin.Context) {
+	srv.GRPCAccessToken(c)
 	c.JSON(http.StatusOK, gin.H{"message": "Pong"})
 }
 

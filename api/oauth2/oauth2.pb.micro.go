@@ -42,6 +42,8 @@ type Oauth2Service interface {
 	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...client.CallOption) (*RefreshTokenReply, error)
 	// 删除AccessToken
 	RemoveToken(ctx context.Context, in *RemoveTokenReq, opts ...client.CallOption) (*RemoveTokenReply, error)
+	// 获取Code
+	AuthorizationCode(ctx context.Context, in *AuthorizationCodeReq, opts ...client.CallOption) (*AuthorizationCodeReply, error)
 }
 
 type oauth2Service struct {
@@ -57,7 +59,7 @@ func NewOauth2Service(name string, c client.Client) Oauth2Service {
 }
 
 func (c *oauth2Service) AccessToken(ctx context.Context, in *AccessTokenReq, opts ...client.CallOption) (*AccessTokenReply, error) {
-	req := c.c.NewRequest(c.name, "Oauth2.InsertAccessToken", in)
+	req := c.c.NewRequest(c.name, "Oauth2.AccessToken", in)
 	out := new(AccessTokenReply)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -96,6 +98,16 @@ func (c *oauth2Service) RemoveToken(ctx context.Context, in *RemoveTokenReq, opt
 	return out, nil
 }
 
+func (c *oauth2Service) AuthorizationCode(ctx context.Context, in *AuthorizationCodeReq, opts ...client.CallOption) (*AuthorizationCodeReply, error) {
+	req := c.c.NewRequest(c.name, "Oauth2.AuthorizationCode", in)
+	out := new(AuthorizationCodeReply)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Oauth2 service
 
 type Oauth2Handler interface {
@@ -107,6 +119,8 @@ type Oauth2Handler interface {
 	RefreshToken(context.Context, *RefreshTokenReq, *RefreshTokenReply) error
 	// 删除AccessToken
 	RemoveToken(context.Context, *RemoveTokenReq, *RemoveTokenReply) error
+	// 获取Code
+	AuthorizationCode(context.Context, *AuthorizationCodeReq, *AuthorizationCodeReply) error
 }
 
 func RegisterOauth2Handler(s server.Server, hdlr Oauth2Handler, opts ...server.HandlerOption) error {
@@ -115,6 +129,7 @@ func RegisterOauth2Handler(s server.Server, hdlr Oauth2Handler, opts ...server.H
 		VerifyToken(ctx context.Context, in *VerifyTokenReq, out *VerifyTokenReply) error
 		RefreshToken(ctx context.Context, in *RefreshTokenReq, out *RefreshTokenReply) error
 		RemoveToken(ctx context.Context, in *RemoveTokenReq, out *RemoveTokenReply) error
+		AuthorizationCode(ctx context.Context, in *AuthorizationCodeReq, out *AuthorizationCodeReply) error
 	}
 	type Oauth2 struct {
 		oauth2
@@ -141,4 +156,8 @@ func (h *oauth2Handler) RefreshToken(ctx context.Context, in *RefreshTokenReq, o
 
 func (h *oauth2Handler) RemoveToken(ctx context.Context, in *RemoveTokenReq, out *RemoveTokenReply) error {
 	return h.Oauth2Handler.RemoveToken(ctx, in, out)
+}
+
+func (h *oauth2Handler) AuthorizationCode(ctx context.Context, in *AuthorizationCodeReq, out *AuthorizationCodeReply) error {
+	return h.Oauth2Handler.AuthorizationCode(ctx, in, out)
 }
