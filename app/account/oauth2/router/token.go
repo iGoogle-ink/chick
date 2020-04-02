@@ -10,12 +10,12 @@ import (
 
 func token(c *gin.Context) {
 	req := new(model.AccessTokenReq)
-	err := c.ShouldBind(&req)
+	err := c.ShouldBind(req)
 	if err != nil {
 		web.JSON(c, nil, errno.RequestErr)
 		return
 	}
-	token, err := srv.GetAccessToken(c, req)
+	token, err := srv.AccessToken(c, req)
 	if err != nil {
 		web.JSON(c, nil, err)
 		return
@@ -24,13 +24,13 @@ func token(c *gin.Context) {
 }
 
 func refreshToken(c *gin.Context) {
-	req := model.OauthRefreshTokenReq{}
-	err := c.ShouldBind(&req)
+	req := &model.RefreshTokenReq{}
+	err := c.ShouldBind(req)
 	if err != nil {
 		web.JSON(c, nil, errno.RequestErr)
 		return
 	}
-	token, err := srv.GetNewToken(c, &req)
+	token, err := srv.RefreshToken(c, req)
 	if err != nil {
 		web.JSON(c, nil, err)
 		return

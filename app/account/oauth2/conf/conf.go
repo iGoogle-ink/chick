@@ -26,8 +26,8 @@ type Config struct {
 
 // 解析配置文件
 func Parse() error {
-	env := os.Getenv("OAUTH_ENV")
-	filePath := os.Getenv("OAUTH_CONF")
+	env := os.Getenv("ACCOUNT_OAUTH_ENV")
+	filePath := os.Getenv("ACCOUNT_OAUTH_CONF")
 	if filePath == "" {
 		return errors.New("load conf path fail")
 	}

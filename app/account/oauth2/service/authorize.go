@@ -6,11 +6,11 @@ import (
 	"encoding/hex"
 	"log"
 	"strconv"
-	"time"
 
 	"chick/app/account/oauth2/model"
 	"chick/errno"
-	xtime "chick/pkg/time"
+
+	"github.com/google/uuid"
 )
 
 // Authorize
@@ -25,28 +25,27 @@ func (s *Service) Authorize(ctx context.Context, userId int, clientKey, rspType,
 		return "", errno.New(-1, "查找Client失败")
 	}
 	// 生成code
-	code := generateCode(userId, client)
+	code := generateCode(userId, client.Key)
 
-	codeInsert := &model.OauthAuthCode{
-		ClientId:    client.Id,
+	codeCache := &model.CacheAuthCode{
+		ClientKey:   client.Key,
 		UserId:      userId,
 		Code:        code,
 		RedirectUri: redUri,
-		ExpiresAt:   xtime.Time(time.Now().Add(time.Duration(5) * time.Minute).Unix()),
+		Expires:     300, // 有效期 300s
 		Scope:       scope,
 	}
-	// code 写入数据库
-	err = s.dao.InsertCode(ctx, codeInsert)
-	if err != nil {
+	// code 写入缓存
+	if err = s.dao.AddCacheAuthCode(ctx, codeCache); err != nil {
 		return "", errno.New(-2, "生成Code失败")
 	}
 	return redUri + "?code=" + code + "&state=" + state, nil
 }
 
-func generateCode(userId int, client *model.OauthClient) (code string) {
+func generateCode(userId int, clientKey string) (code string) {
 	hash := md5.New()
-	hash.Write([]byte(client.Key))
+	hash.Write([]byte(clientKey))
 	hash.Write([]byte(strconv.Itoa(userId)))
-	hash.Write([]byte(time.Now().String()))
+	hash.Write([]byte(uuid.New().String()))
 	return hex.EncodeToString(hash.Sum(nil))
 }

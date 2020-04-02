@@ -1,7 +1,7 @@
 package conf
 
 import (
-	"flag"
+	"os"
 
 	"chick/pkg/config"
 	"chick/pkg/orm"
@@ -11,9 +11,7 @@ import (
 )
 
 var (
-	env      string
-	filePath string
-	Conf     = &Config{}
+	Conf = &Config{}
 )
 
 type Config struct {
@@ -25,14 +23,10 @@ type Config struct {
 	Redis    *orm.Redis
 }
 
-func init() {
-	flag.StringVar(&env, "env", "", "env or prod")
-	flag.StringVar(&filePath, "conf", "", "conf file path")
-}
-
 // 解析配置文件
 func Parse() error {
-	flag.Parse()
+	env := os.Getenv("WEB_ADMIN_ENV")
+	filePath := os.Getenv("WEB_ADMIN_CONF")
 	if filePath == "" {
 		return errors.New("load conf path fail")
 	}

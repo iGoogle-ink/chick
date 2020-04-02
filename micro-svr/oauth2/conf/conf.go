@@ -22,10 +22,6 @@ type Config struct {
 	OauthClient []*config.OauthClient
 }
 
-func init() {
-
-}
-
 // 解析配置文件
 func Parse() error {
 	env := os.Getenv("MICRO_OAUTH_ENV")

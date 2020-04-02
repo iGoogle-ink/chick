@@ -14,8 +14,8 @@ import (
 	"chick/errno"
 	xtime "chick/pkg/time"
 
-	"github.com/jinzhu/gorm"
-	"gopkg.in/oauth2.v3/utils/uuid"
+	"github.com/go-redis/redis/v7"
+	"github.com/google/uuid"
 )
 
 func (s *Service) GRPCAccessToken(ctx context.Context) {
@@ -34,65 +34,43 @@ func (s *Service) GRPCAccessToken(ctx context.Context) {
 	log.Println("token.ExpiresIn:", token.ExpiresIn)
 }
 
-// GetAccessToken
-func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq) (*model.AccessTokenRsp, error) {
-
-	// 校验code
-	dbCode, err := s.dao.GetCodeInfoByCode(ctx, req.Code)
+// AccessToken
+func (s *Service) AccessToken(ctx context.Context, req *model.AccessTokenReq) (*model.AccessTokenRsp, error) {
+	// 获取code
+	dbCode, err := s.dao.CacheAuthCode(ctx, req.Code)
 	if err != nil {
+		if err == redis.Nil {
+			return nil, errno.CodeExpired
+		}
 		return nil, errno.InvalidCode
 	}
-	//校验code 过期
-
-	if dbCode.ExpiresAt.Time().Before(time.Now()) {
-		return nil, errno.CodeExpired
-	}
-	// 校验 client_key, client_secret
-	ok, err := s.dao.CheckClientInfo(ctx, dbCode.ClientId, req.ClientId, req.ClientSecret)
+	// 获取Client信息
+	client, err := s.dao.GetClient(ctx, req.ClientId)
 	if err != nil {
-		return nil, errno.InvalidCode
-	}
-	if !ok {
 		return nil, errno.InvalidClient
 	}
-
+	// 验证 key 和 secret
+	if !(req.ClientId == client.Key && req.ClientSecret == client.Secret) {
+		return nil, errno.InvalidClient
+	}
 	// 生成token
-	access, refresh, _ := generateToken(req.ClientId, dbCode.UserId, true)
+	access := generateToken(req.ClientId, dbCode.UserId)
+	refresh := generateToken(req.ClientId, dbCode.UserId)
+	// 有效期
 	expireAt := xtime.Time(time.Now().Add(time.Second * time.Duration(conf.Conf.TokenExpiresIn)).Unix())
-
-	err = s.dao.DB.Transaction(func(tx *gorm.DB) error {
-		// 插入access_token
-		accessToken := &model.OauthAccessToken{
-			ClientId:  dbCode.Id,
-			UserId:    dbCode.UserId,
-			Token:     access,
-			ExpiresAt: expireAt,
-			Scope:     dbCode.Scope,
-		}
-		if err := s.dao.TxInsertAccessToken(ctx, tx, accessToken); err != nil {
-			return err
-		}
-		// 插入refresh_token
-		refreshToken := &model.OauthRefreshToken{
-			ClientId:  dbCode.Id,
-			UserId:    dbCode.UserId,
-			Token:     refresh,
-			ExpiresAt: expireAt,
-			Scope:     dbCode.Scope,
-		}
-		if err := s.dao.TxInsertRefreshToken(ctx, tx, refreshToken); err != nil {
-			return err
-		}
-		// 删除code
-		if err := s.dao.DeleteCodeInfoByCode(ctx, tx, req.Code); err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
+	// 插入access_token
+	accessToken := &model.OauthAccessToken{
+		ClientId:  client.Id,
+		UserId:    dbCode.UserId,
+		Access:    access,
+		Refresh:   refresh,
+		ExpiresAt: expireAt,
+		Scope:     dbCode.Scope,
+	}
+	if err := s.dao.InsertAccessToken(ctx, accessToken); err != nil {
 		return nil, err
 	}
-
+	// 返回 Rsp
 	rsp := &model.AccessTokenRsp{
 		AccessToken:  access,
 		ExpiresIn:    conf.Conf.TokenExpiresIn,
@@ -101,71 +79,45 @@ func (s *Service) GetAccessToken(ctx context.Context, req *model.AccessTokenReq)
 	return rsp, nil
 }
 
-func (s *Service) GetNewToken(ctx context.Context, req *model.OauthRefreshTokenReq) (*model.AccessTokenRsp, error) {
-	refreshTokenInfo, ok := s.dao.GetRefreshToken(ctx, req)
-	if !ok {
+func (s *Service) RefreshToken(ctx context.Context, req *model.RefreshTokenReq) (*model.AccessTokenRsp, error) {
+	// 获取Client信息
+	client, err := s.dao.GetClient(ctx, req.ClientId)
+	if err != nil {
+		return nil, errno.InvalidClient
+	}
+	// 验证 key 和 secret
+	if !(req.ClientId == client.Key && req.ClientSecret == client.Secret) {
+		return nil, errno.InvalidClient
+	}
+	// 获取原有的 AccessToken 信息
+	at, err := s.dao.AccessToken(ctx, req.RefreshToken)
+	if err != nil {
 		return nil, errno.InvalidRefreshToken
 	}
-	access, refresh, _ := generateToken(req.ClientId, refreshTokenInfo.UserId, true)
+	// 生成token
+	access := generateToken(req.ClientId, at.UserId)
+	refresh := generateToken(req.ClientId, at.UserId)
+	// 有效期
 	expireAt := xtime.Time(time.Now().Add(time.Second * time.Duration(conf.Conf.TokenExpiresIn)).Unix())
-	if err := s.dao.DB.Transaction(func(tx *gorm.DB) error {
-		// 插入access_token
-		accessToken := &model.OauthAccessToken{
-			ClientId:  refreshTokenInfo.ClientId,
-			UserId:    refreshTokenInfo.UserId,
-			Token:     access,
-			ExpiresAt: expireAt,
-			Scope:     refreshTokenInfo.Scope,
-		}
-		if err := s.dao.TxInsertAccessToken(ctx, tx, accessToken); err != nil {
-			return err
-		}
-		// 插入refresh_token
-		refreshToken := &model.OauthRefreshToken{
-			ClientId:  refreshTokenInfo.ClientId,
-			UserId:    refreshTokenInfo.UserId,
-			Token:     refresh,
-			ExpiresAt: expireAt,
-			Scope:     refreshTokenInfo.Scope,
-		}
-		if err := s.dao.TxInsertRefreshToken(ctx, tx, refreshToken); err != nil {
-			return err
-		}
-
-		// 软删除refreshToken
-		if err := s.dao.TxDeleteRefreshToken(ctx, tx, refreshTokenInfo); err != nil {
-			return err
-		}
-		return nil
-	}); err != nil {
-		return nil, err
+	// 更新 access_token
+	if err = s.dao.UpdateAccessToken(ctx, at.Id, access, refresh, expireAt); err != nil {
+		return nil, errno.New(423, "刷新AccessToken失败")
 	}
+	// 返回Rsp
 	rsp := &model.AccessTokenRsp{
 		AccessToken:  access,
 		ExpiresIn:    conf.Conf.TokenExpiresIn,
 		RefreshToken: refresh,
 	}
-
 	return rsp, nil
 }
 
-func generateToken(clientKey string, userId int, isGenRefresh bool) (string, string, error) {
-	var refreshToken string
-
+func generateToken(clientKey string, userId int) (token string) {
 	buf := bytes.NewBufferString(clientKey)
 	buf.WriteString(strconv.Itoa(userId))
 	buf.WriteString(time.Now().String())
-	buf.WriteString(uuid.Must(uuid.NewRandom()).String())
-
+	buf.WriteString(uuid.New().String())
 	hash := md5.New()
 	hash.Write(buf.Bytes())
-	accessToken := hex.EncodeToString(hash.Sum(nil))
-
-	if isGenRefresh {
-		buf.WriteString(uuid.Must(uuid.NewRandom()).String())
-		refreshHash := md5.New()
-		refreshHash.Write(buf.Bytes())
-		refreshToken = hex.EncodeToString(refreshHash.Sum(nil))
-	}
-	return accessToken, refreshToken, nil
+	return hex.EncodeToString(hash.Sum(nil))
 }
