@@ -17,14 +17,14 @@ func authorize(c *gin.Context) {
 	session, _ := c.Cookie("session")
 	fmt.Println("session:", session)
 	if session == "" {
-		loginUrl, _ := url.Parse("http://localhost:8082/account/static/login")
+		loginUrl, _ := url.Parse("http://localhost:2233/account/static/login")
 		web.Redirect(c, loginUrl.String()+"?"+params)
 		return
 	}
 	// 已登录，获取用户id
 	userId := checkAndGetUserId(session)
 	if userId <= 0 {
-		loginUrl, _ := url.Parse("http://localhost:8082/account/static/login")
+		loginUrl, _ := url.Parse("http://localhost:2233/account/static/login")
 		web.Redirect(c, loginUrl.String()+"?"+params)
 		return
 	}

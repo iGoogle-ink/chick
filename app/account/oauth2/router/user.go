@@ -24,8 +24,8 @@ func login(c *gin.Context) {
 		web.JSON(c, nil, err)
 		return
 	}
-	c.SetCookie("session", session, 30*24*60*60, "/", "localhost:8082", http.SameSiteDefaultMode, false, true)
-	web.Redirect(c, "http://localhost:8082/account/static/auth?"+params)
+	c.SetCookie("session", session, 30*24*60*60, "/", "localhost:2233", http.SameSiteDefaultMode, false, true)
+	web.Redirect(c, "http://localhost:2233/account/static/auth?"+params)
 }
 
 func register(c *gin.Context) {
@@ -40,6 +40,6 @@ func register(c *gin.Context) {
 		web.JSON(c, nil, err)
 		return
 	}
-	loginUrl, _ := url.Parse("http://localhost:8082/account/static/login")
+	loginUrl, _ := url.Parse("http://localhost:2233/account/static/login")
 	web.Redirect(c, loginUrl.String()+"?"+params)
 }
