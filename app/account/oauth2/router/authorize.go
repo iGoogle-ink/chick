@@ -35,7 +35,6 @@ func authorize(c *gin.Context) {
 		web.JSON(c, nil, errno.RequestErr)
 		return
 	}
-	fmt.Println("req:", req)
 	locationUrl, err := srv.Authorize(c, userId, req.ClientKey, req.ResponseType, req.RedirectUri, req.Scope, req.State)
 	if err != nil {
 		web.JSON(c, nil, err)

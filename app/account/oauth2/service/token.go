@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -37,13 +38,14 @@ func (s *Service) GRPCAccessToken(ctx context.Context) {
 // AccessToken
 func (s *Service) AccessToken(ctx context.Context, req *model.AccessTokenReq) (*model.AccessTokenRsp, error) {
 	// 获取code
-	dbCode, err := s.dao.CacheAuthCode(ctx, req.Code)
+	code, err := s.dao.CacheAuthCode(ctx, req.Code)
 	if err != nil {
 		if err == redis.Nil {
 			return nil, errno.CodeExpired
 		}
 		return nil, errno.InvalidCode
 	}
+	fmt.Println("code:", code)
 	// 获取Client信息
 	client, err := s.dao.GetClient(ctx, req.ClientId)
 	if err != nil {
@@ -54,18 +56,18 @@ func (s *Service) AccessToken(ctx context.Context, req *model.AccessTokenReq) (*
 		return nil, errno.InvalidClient
 	}
 	// 生成token
-	access := generateToken(req.ClientId, dbCode.UserId)
-	refresh := generateToken(req.ClientId, dbCode.UserId)
+	access := generateToken(req.ClientId, code.UserId)
+	refresh := generateToken(req.ClientId, code.UserId)
 	// 有效期
 	expireAt := xtime.Time(time.Now().Add(time.Second * time.Duration(conf.Conf.TokenExpiresIn)).Unix())
 	// 插入access_token
 	accessToken := &model.OauthAccessToken{
 		ClientId:  client.Id,
-		UserId:    dbCode.UserId,
+		UserId:    code.UserId,
 		Access:    access,
 		Refresh:   refresh,
 		ExpiresAt: expireAt,
-		Scope:     dbCode.Scope,
+		Scope:     code.Scope,
 	}
 	if err := s.dao.InsertAccessToken(ctx, accessToken); err != nil {
 		return nil, err

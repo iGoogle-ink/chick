@@ -27,6 +27,7 @@ type Dao struct {
 }
 
 func New(c *conf.Config) (d *Dao) {
+	fmt.Println("redisConfig:", c.Redis.Addrs)
 	d = &Dao{
 		DB:        orm.InitMySQL(c.MySQL),
 		redis:     orm.InitRedisCluster(c.Redis),

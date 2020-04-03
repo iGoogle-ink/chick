@@ -32,11 +32,12 @@ func (s *Service) Authorize(ctx context.Context, userId int, clientKey, rspType,
 		UserId:      userId,
 		Code:        code,
 		RedirectUri: redUri,
-		Expires:     300, // 有效期 300s
+		Expires:     600, // 有效期 600s
 		Scope:       scope,
 	}
 	// code 写入缓存
 	if err = s.dao.AddCacheAuthCode(ctx, codeCache); err != nil {
+		log.Printf("s.dao.AddCacheAuthCode(%v) error:%+v.\n", codeCache, err)
 		return "", errno.New(-2, "生成Code失败")
 	}
 	return redUri + "?code=" + code + "&state=" + state, nil

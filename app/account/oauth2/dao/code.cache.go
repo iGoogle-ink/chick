@@ -21,9 +21,9 @@ func (d *Dao) CacheAuthCode(ctx context.Context, code string) (codeInfo *model.C
 	}
 	codeInfo = new(model.CacheAuthCode)
 	if err = json.Unmarshal(bs, codeInfo); err != nil {
-		return codeInfo, nil
+		return nil, err
 	}
-	return nil, err
+	return codeInfo, nil
 }
 
 func (d *Dao) AddCacheAuthCode(ctx context.Context, code *model.CacheAuthCode) error {

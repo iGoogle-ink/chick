@@ -25,7 +25,7 @@
     },
     "Redis": {
       "Addrs": [
-        "120.0.0.1:1001"
+        "127.0.0.1:8001"
       ],
       "Password": "",
       "DB": 0
@@ -55,7 +55,7 @@
     "Registry": {
       "Etcd": {
         "Addrs": [
-          "127.0.0.1:2379"
+          "192.168.18.180:2379"
         ]
       }
     },
@@ -76,13 +76,13 @@
     },
     "Redis": {
       "Addrs": [
-        "120.0.0.1:1001"
+        "192.168.18.180:8001"
       ],
       "Password": "",
       "DB": 0
     },
     "MySQL": {
-      "DSN": "root:root@tcp(127.0.0.1:3306)/test?timeout=2s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4",
+      "DSN": "mxchip:mxchip@tcp(192.168.18.180:3306)/mx_cloud?timeout=2s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4",
       "Active": 10,
       "Idle": 10,
       "IdleTimeout": 5,

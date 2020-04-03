@@ -6,19 +6,19 @@ import (
 
 // Redis redis config.
 type Redis struct {
-	Addr     []string
+	Addrs    []string
 	Password string
 	DB       int
 }
 
 func InitRedisCluster(c *Redis) (r *redis.ClusterClient) {
 	r = redis.NewClusterClient(&redis.ClusterOptions{
-		Addrs:    c.Addr,
+		Addrs:    c.Addrs,
 		Password: c.Password,
 	})
-	//_, err := r.Ping().Result()
-	//if err != nil {
-	//	panic(err)
-	//}
+	_, err := r.Ping().Result()
+	if err != nil {
+		panic(err)
+	}
 	return r
 }
