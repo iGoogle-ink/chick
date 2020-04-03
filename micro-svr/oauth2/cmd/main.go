@@ -30,7 +30,7 @@ func main() {
 		switch si {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			time.Sleep(time.Second)
-			log.Printf("get a signal %s, stop the oauth2 process\n", si.String())
+			log.Printf("%s: get a signal %s, stop the oauth2 process\n", conf.Conf.Name, si.String())
 			srv.Close()
 			time.Sleep(time.Second)
 			return
