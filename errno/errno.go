@@ -28,7 +28,12 @@ func New(code int, msg string) Error {
 // A Code is an int error code spec.
 type Error int
 
-func (e Error) Error() string { return strconv.Itoa(int(e)) }
+func (e Error) Error() string {
+	if msg, ok := errorMap.Load(e.Code()); ok {
+		return msg.(string)
+	}
+	return strconv.Itoa(int(e))
+}
 
 // Code return error code
 func (e Error) Code() int { return int(e) }
