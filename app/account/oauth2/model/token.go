@@ -21,6 +21,10 @@ func (m *OauthAccessToken) TableName() string {
 	return "oauth_access_token"
 }
 
+func (m *OauthAccessToken) CheckRefreshToken(refresh string) bool {
+	return m.Refresh == refresh
+}
+
 type (
 	AccessTokenReq struct {
 		ClientId     string `form:"client_id" json:"client_id"`

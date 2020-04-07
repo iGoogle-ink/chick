@@ -96,6 +96,10 @@ func (s *Service) RefreshToken(ctx context.Context, req *model.RefreshTokenReq) 
 	if err != nil {
 		return nil, errno.InvalidRefreshToken
 	}
+	// 验证 RefreshToken 有效性
+	if !at.CheckRefreshToken(req.RefreshToken) {
+		return nil, errno.InvalidRefreshToken
+	}
 	// 生成token
 	access := generateToken(req.ClientId, at.UserId)
 	refresh := generateToken(req.ClientId, at.UserId)
