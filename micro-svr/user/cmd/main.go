@@ -7,12 +7,13 @@ import (
 	"syscall"
 	"time"
 
-	"chick/app/account/oauth2/conf"
-	"chick/app/account/oauth2/router"
-	"chick/app/account/oauth2/service"
+	"chick/micro-svr/user/conf"
+	"chick/micro-svr/user/server"
+	"chick/micro-svr/user/service"
 )
 
 func main() {
+
 	err := conf.Parse()
 	if err != nil {
 		panic(err)
@@ -20,7 +21,7 @@ func main() {
 
 	srv := service.New(conf.Conf)
 
-	router.Init(conf.Conf, srv)
+	server.Init(conf.Conf, srv)
 
 	ch := make(chan os.Signal)
 	signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
@@ -30,7 +31,6 @@ func main() {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			time.Sleep(time.Second)
 			log.Printf("%s: get a signal %s, stop the process\n", conf.Conf.Name, si.String())
-
 			srv.Close()
 			time.Sleep(time.Second)
 			return

@@ -29,7 +29,7 @@ func main() {
 		switch si {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			time.Sleep(time.Second)
-			log.Printf("%s: get a signal %s, stop the admin process\n", conf.Conf.Name, si.String())
+			log.Printf("%s: get a signal %s, stop the process\n", conf.Conf.Name, si.String())
 
 			srv.Close()
 			time.Sleep(time.Second)

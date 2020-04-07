@@ -15,18 +15,17 @@ var (
 )
 
 type Config struct {
-	Name        string
-	Registry    *config.Registry
-	Broker      *config.Broker
-	MySQL       *orm.MySQL
-	Redis       *orm.Redis
-	OauthClient []*config.OauthClient
+	Name     string
+	Registry *config.Registry
+	Broker   *config.Broker
+	MySQL    *orm.MySQL
+	Redis    *orm.Redis
 }
 
 // 解析配置文件
 func Parse() error {
-	env := os.Getenv("MICRO_OAUTH_ENV")
-	filePath := os.Getenv("MICRO_OAUTH_CONF")
+	env := os.Getenv("MICRO_USER_ENV")
+	filePath := os.Getenv("MICRO_USER_CONF")
 	if filePath == "" {
 		return errors.New("load conf path fail")
 	}

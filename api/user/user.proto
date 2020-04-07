@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package user;
+
+message LoginReq {
+    string uname = 1;
+    string passwd = 2;
+}
+message LoginReply {
+    bool IsOk = 1;
+}
+
+service User {
+    // 登录
+    rpc Login (LoginReq) returns (LoginReply) {
+    }
+}
+
+// cd api/
+// protoc --proto_path=user --micro_out=user --go_out=user user/user.proto
