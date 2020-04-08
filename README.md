@@ -10,8 +10,11 @@
 - [viper](https://github.com/spf13/viper)
 - [errors](https://github.com/pkg/errors)
 
+### 项目结构图
 
-### 结构介绍
+![arch](chick.png)
+
+### 目录结构介绍
 ```
 ├── api   // proto service
 │   ├── oauth2
