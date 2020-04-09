@@ -1,19 +1,14 @@
 package dao
 
 import (
-	"context"
-
 	"chick/api/oauth2"
 	"chick/app/account/oauth2/conf"
-	"chick/pkg/log"
+	"chick/pkg/micro"
 	"chick/pkg/orm"
 
 	"github.com/go-redis/redis/v7"
 	"github.com/jinzhu/gorm"
-	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/client"
-	"github.com/micro/go-micro/v2/registry"
-	"github.com/micro/go-micro/v2/registry/etcd"
 )
 
 const (
@@ -41,27 +36,9 @@ func (d *Dao) Close() {
 	}
 }
 
-func initOauthGrpc(c *conf.Config) oauth2.Oauth2Service {
-	etcdRegistry := etcd.NewRegistry(func(options *registry.Options) {
-		options.Addrs = c.Registry.Etcd.Addrs
+func initOauthGrpc(c *conf.Config) (cli oauth2.Oauth2Service) {
+	micro.InitClient(c.Name, "latest", c.Registry, nil, func(c client.Client) {
+		cli = oauth2.NewOauth2Service(ServiceOauth2, c)
 	})
-	service := micro.NewService(
-		micro.Name(c.Name),
-		micro.Registry(etcdRegistry),
-		micro.WrapClient(logWrap),
-	)
-	service.Init()
-	return oauth2.NewOauth2Service(ServiceOauth2, service.Client())
-}
-func logWrap(c client.Client) client.Client {
-	return &logWrapper{c}
-}
-
-type logWrapper struct {
-	client.Client
-}
-
-func (l *logWrapper) Call(ctx context.Context, req client.Request, rsp interface{}, opts ...client.CallOption) error {
-	log.Infof("[wrapper] client request to service: %s endpoint: %s.", req.Service(), req.Endpoint())
-	return l.Client.Call(ctx, req, rsp)
+	return cli
 }

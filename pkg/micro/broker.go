@@ -1,7 +1,8 @@
-package server
+package micro
 
 import (
 	"chick/pkg/config"
+
 	"github.com/micro/go-micro/v2/broker"
 	"github.com/micro/go-plugins/broker/nsq/v2"
 )

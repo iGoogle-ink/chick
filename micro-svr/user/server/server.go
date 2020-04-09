@@ -5,16 +5,15 @@ import (
 	"chick/micro-svr/user/conf"
 	"chick/micro-svr/user/service"
 	"chick/pkg/log"
-	"chick/pkg/server"
+	"chick/pkg/micro"
+
+	"github.com/micro/go-micro/v2/server"
 )
 
 func Init(c *conf.Config, srv *service.Service) {
-	s, err := server.InitServer(c.Name, "latest", c.Registry)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	_ = user.RegisterUserHandler(s.Server.Server(), srv)
-
-	s.Start()
+	micro.InitServer(c.Name, "latest", c.Registry, nil, func(s server.Server) {
+		if err := user.RegisterUserHandler(s, srv); err != nil {
+			log.Panic(err)
+		}
+	})
 }
