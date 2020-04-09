@@ -4,11 +4,11 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
-	"log"
 	"strconv"
 
 	"chick/app/account/oauth2/model"
 	"chick/errno"
+	"chick/pkg/log"
 
 	"github.com/google/uuid"
 )
@@ -21,7 +21,7 @@ func (s *Service) Authorize(ctx context.Context, userId int, clientKey, rspType,
 	// 查找Client信息
 	client, err := s.dao.GetClient(ctx, clientKey)
 	if err != nil {
-		log.Printf("s.dao.GetClient(%s) err:%+v,\n", clientKey, err)
+		log.Errorf("s.dao.GetClient(%s) err:%+v.", clientKey, err)
 		return "", errno.New(-1, "查找Client失败")
 	}
 	// 生成code
@@ -37,7 +37,7 @@ func (s *Service) Authorize(ctx context.Context, userId int, clientKey, rspType,
 	}
 	// code 写入缓存
 	if err = s.dao.AddCacheAuthCode(ctx, codeCache); err != nil {
-		log.Printf("s.dao.AddCacheAuthCode(%v) error:%+v.\n", codeCache, err)
+		log.Errorf("s.dao.AddCacheAuthCode(%v) error:%+v.", codeCache, err)
 		return "", errno.New(-2, "生成Code失败")
 	}
 	return redUri + "?code=" + code + "&state=" + state, nil

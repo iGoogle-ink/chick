@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,13 +9,14 @@ import (
 	"chick/micro-svr/oauth2/conf"
 	"chick/micro-svr/oauth2/server"
 	"chick/micro-svr/oauth2/service"
+	"chick/pkg/log"
 )
 
 func main() {
 
 	err := conf.Parse()
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 
 	srv := service.New(conf.Conf)
@@ -30,7 +30,8 @@ func main() {
 		switch si {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			time.Sleep(time.Second)
-			log.Printf("%s: get a signal %s, stop the process\n", conf.Conf.Name, si.String())
+			log.Criticalf("%s: get a signal %s, stop the process", conf.Conf.Name, si.String())
+
 			srv.Close()
 			time.Sleep(time.Second)
 			return

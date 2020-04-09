@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"runtime"
 	"sync"
+
+	"chick/pkg/log"
 )
 
 // A Group is a collection of goroutines working on subtasks that are part of
@@ -69,7 +71,7 @@ func (g *Group) do(f func(ctx context.Context) error) {
 // GOMAXPROCS set max goroutine to work.
 func (g *Group) GOMAXPROCS(n int) {
 	if n <= 0 {
-		panic("errgroup: GOMAXPROCS must great than 0")
+		log.Panic("errgroup: GOMAXPROCS must great than 0")
 	}
 	g.workerOnce.Do(func() {
 		g.ch = make(chan func(context.Context) error, n)

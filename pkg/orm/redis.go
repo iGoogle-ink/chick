@@ -1,6 +1,7 @@
 package orm
 
 import (
+	"chick/pkg/log"
 	"github.com/go-redis/redis/v7"
 )
 
@@ -18,7 +19,7 @@ func InitRedisCluster(c *Redis) (r *redis.ClusterClient) {
 	})
 	_, err := r.Ping().Result()
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 	return r
 }

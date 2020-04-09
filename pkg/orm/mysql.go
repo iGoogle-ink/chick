@@ -1,9 +1,9 @@
 package orm
 
 import (
-	"fmt"
 	"time"
 
+	"chick/pkg/log"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -20,7 +20,7 @@ type MySQL struct {
 func InitMySQL(c *MySQL) (db *gorm.DB) {
 	db, err := gorm.Open("mysql", c.DSN)
 	if err != nil {
-		panic(fmt.Sprintf("failed to connect database error:%+v", err))
+		log.Panicf("failed to connect database error:%+v", err)
 	}
 	db.DB().SetMaxIdleConns(c.Idle)
 	db.LogMode(c.ShowSQL)

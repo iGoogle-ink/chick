@@ -5,14 +5,13 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
-	"log"
 	"strconv"
 	"time"
 
 	"chick/app/account/oauth2/conf"
 	"chick/app/account/oauth2/model"
 	"chick/errno"
+	"chick/pkg/log"
 	xtime "chick/pkg/time"
 
 	"github.com/go-redis/redis/v7"
@@ -27,12 +26,12 @@ func (s *Service) GRPCAccessToken(ctx context.Context) {
 	)
 	token, err := s.dao.GRPCAccessToken(ctx, key, secret, code)
 	if err != nil {
-		log.Println("s.dao.GRPCAccessToken:", err)
+		log.Error("s.dao.GRPCAccessToken:", err)
 		return
 	}
-	log.Println("token.AccessToken:", token.AccessToken)
-	log.Println("token.RefreshToken:", token.RefreshToken)
-	log.Println("token.ExpiresIn:", token.ExpiresIn)
+	log.Info("token.AccessToken:", token.AccessToken)
+	log.Info("token.RefreshToken:", token.RefreshToken)
+	log.Info("token.ExpiresIn:", token.ExpiresIn)
 }
 
 // AccessToken
@@ -45,7 +44,6 @@ func (s *Service) AccessToken(ctx context.Context, req *model.AccessTokenReq) (*
 		}
 		return nil, errno.InvalidCode
 	}
-	fmt.Println("code:", code)
 	// 获取Client信息
 	client, err := s.dao.GetClient(ctx, req.ClientId)
 	if err != nil {

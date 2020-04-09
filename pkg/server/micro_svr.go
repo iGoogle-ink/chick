@@ -1,9 +1,8 @@
 package server
 
 import (
-	"log"
-
 	"chick/pkg/config"
+	"chick/pkg/log"
 
 	"github.com/micro/go-micro/v2"
 	"github.com/pkg/errors"
@@ -52,8 +51,7 @@ func InitServer(name, version string, registry *config.Registry, broker ...*conf
 func (m *MicroServer) Start() {
 	go func() {
 		if err := m.Server.Run(); err != nil {
-			log.Printf("micro server run error(%+v).\n", err)
-			panic(err)
+			log.Panicf("micro server run error(%+v).", err)
 		}
 	}()
 }

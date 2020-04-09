@@ -1,7 +1,7 @@
 package web
 
 import (
-	"log"
+	"chick/pkg/log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,8 +22,7 @@ func InitServer(port string) *Engine {
 func (e *Engine) Start() {
 	go func() {
 		if err := e.Gin.Run(e.port); err != nil {
-			log.Printf("web server port(%s) run error(%+v).\n", e.port, err)
-			panic(err)
+			log.Panicf("web server port(%s) run error(%+v).", e.port, err)
 		}
 	}()
 }
