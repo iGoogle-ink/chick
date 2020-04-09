@@ -9,12 +9,6 @@ import (
 // InsertAccessToken 获取 access token
 func (s *Service) AccessToken(ctx context.Context, in *oauth2.AccessTokenReq, out *oauth2.AccessTokenReply) (err error) {
 	// todo: get user openid
-	//token, err := s.dao.GenerateAccessToken(ctx, in.ClientId, in.ClientSecret, in.Code, "1")
-	//if err != nil {
-	//	fmt.Println("s.dao.GenerateAccessToken err:", err)
-	//	return err
-	//}
-	//fmt.Println("AccessToken:", token)
 	out.AccessToken = "e110e93a549281a731ae694714789cf6"
 	out.ExpiresIn = "1521312134"
 	out.RefreshToken = "0acb42bcc1b6070e5be24628f6fac748"

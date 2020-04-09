@@ -2,10 +2,10 @@ package dao
 
 import (
 	"context"
-	"fmt"
 
 	"chick/api/oauth2"
 	"chick/app/account/oauth2/conf"
+	"chick/pkg/log"
 	"chick/pkg/orm"
 
 	"github.com/go-redis/redis/v7"
@@ -27,7 +27,6 @@ type Dao struct {
 }
 
 func New(c *conf.Config) (d *Dao) {
-	fmt.Println("redisConfig:", c.Redis.Addrs)
 	d = &Dao{
 		DB:        orm.InitMySQL(c.MySQL),
 		redis:     orm.InitRedisCluster(c.Redis),
@@ -63,6 +62,6 @@ type logWrapper struct {
 }
 
 func (l *logWrapper) Call(ctx context.Context, req client.Request, rsp interface{}, opts ...client.CallOption) error {
-	fmt.Printf("[wrapper] client request to service: %s endpoint: %s\n", req.Service(), req.Endpoint())
+	log.Infof("[wrapper] client request to service: %s endpoint: %s.", req.Service(), req.Endpoint())
 	return l.Client.Call(ctx, req, rsp)
 }

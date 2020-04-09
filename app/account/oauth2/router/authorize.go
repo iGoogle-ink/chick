@@ -1,11 +1,11 @@
 package router
 
 import (
-	"fmt"
 	"net/url"
 
 	"chick/app/account/oauth2/model"
 	"chick/errno"
+	"chick/pkg/log"
 	"chick/pkg/web"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +15,7 @@ func authorize(c *gin.Context) {
 	params := c.Request.URL.Query().Encode()
 	// cookie中未找到session，跳转到登录页面
 	session, _ := c.Cookie("session")
-	fmt.Println("session:", session)
+	log.Info("session:", session)
 	if session == "" {
 		loginUrl, _ := url.Parse("http://localhost:2233/account/static/login")
 		web.Redirect(c, loginUrl.String()+"?"+params)
@@ -40,6 +40,6 @@ func authorize(c *gin.Context) {
 		web.JSON(c, nil, err)
 		return
 	}
-	fmt.Println("locationUrl:", locationUrl)
+	log.Info("locationUrl:", locationUrl)
 	web.Redirect(c, locationUrl)
 }

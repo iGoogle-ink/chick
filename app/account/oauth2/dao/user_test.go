@@ -2,9 +2,9 @@ package dao
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
+	"chick/pkg/log"
 	"github.com/smartystreets/goconvey/convey"
 )
 
@@ -17,7 +17,7 @@ func TestDao_CloudUserInfo(t *testing.T) {
 		user, err := d.CloudUserInfo(ctx, name)
 		c.Convey("CloudUserInfo err should be nil", func(c convey.C) {
 			c.So(err, convey.ShouldBeNil)
-			fmt.Println("user:", user)
+			log.Info("user:", user)
 		})
 	})
 }
