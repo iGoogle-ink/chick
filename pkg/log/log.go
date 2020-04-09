@@ -119,7 +119,7 @@ func initLogger() {
 	log.logger = logging.MustGetLogger("chick")
 	log.logger.ExtraCalldepth = 2
 	// %{id:03x} %{level:-8s}
-	log.format = logging.MustStringFormatter(`%{color}[%{time:2006-01-02 15:04:05.000}] ▶ %{level:.4s} [%{shortfunc}] : %{color:reset}%{message}`)
+	log.format = logging.MustStringFormatter(`%{color}[%{time:2006-01-02 15:04:05.000}] ▶ %{level:.4s} [%{shortfunc}] ▶ %{color:reset}%{message}`)
 	log.setPrefix(lPrefix)
 	backendFormatter := logging.NewBackendFormatter(log.backend, log.format)
 	logging.SetBackend(backendFormatter)
