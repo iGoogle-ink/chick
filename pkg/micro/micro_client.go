@@ -2,6 +2,7 @@ package micro
 
 import (
 	"chick/pkg/config"
+
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/client"
 )
@@ -26,6 +27,6 @@ func InitClient(cliName, version string, registry *config.Registry, broker *conf
 			micro.Version(version),
 		)
 	}
-	s.Init()
+	//s.Init()
 	fn(s.Client())
 }

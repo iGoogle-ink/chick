@@ -3,6 +3,7 @@ package micro
 import (
 	"chick/pkg/config"
 	"chick/pkg/log"
+
 	"github.com/micro/go-micro/v2"
 	"github.com/micro/go-micro/v2/server"
 )
@@ -30,7 +31,7 @@ func InitServer(name, version string, registry *config.Registry, broker *config.
 			micro.Version(version),
 		)
 	}
-	s.Init()
+	//s.Init()
 	fn(s.Server())
 
 	go func() {

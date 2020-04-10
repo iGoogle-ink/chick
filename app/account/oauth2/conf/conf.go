@@ -29,7 +29,7 @@ func Parse() error {
 	env := os.Getenv("ACCOUNT_OAUTH_ENV")
 	filePath := os.Getenv("ACCOUNT_OAUTH_CONF")
 	if filePath == "" {
-		return errors.New("load conf path fail")
+		return errors.New("load config path fail")
 	}
 	viper.SetConfigFile(filePath)
 	viper.SetConfigType("json")

@@ -29,9 +29,9 @@ func (s *Service) GRPCAccessToken(ctx context.Context) {
 		log.Error("s.dao.GRPCAccessToken:", err)
 		return
 	}
-	log.Info("token.AccessToken:", token.AccessToken)
-	log.Info("token.RefreshToken:", token.RefreshToken)
-	log.Info("token.ExpiresIn:", token.ExpiresIn)
+	log.Debug("token.AccessToken:", token.AccessToken)
+	log.Debug("token.RefreshToken:", token.RefreshToken)
+	log.Debug("token.ExpiresIn:", token.ExpiresIn)
 }
 
 // AccessToken
