@@ -1,0 +1,7 @@
+pipeline:
+  golang:
+    image: golang
+    commands:
+      - go version
+      - go env
+      - cd app/account/oauth2/cmd && go build
