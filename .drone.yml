@@ -4,4 +4,4 @@ pipeline:
     commands:
       - go version
       - go env
-      - cd app/account/oauth2/cmd && go build
+      - go build -o oauth2 app/account/oauth2/cmd
