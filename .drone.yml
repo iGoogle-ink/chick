@@ -1,5 +1,14 @@
-pipeline:
-  golang:
+---
+kind: pipeline
+type: docker
+name: chick
+
+clone:
+  depth: 1
+
+steps:
+  - name: ci
+    pull: if-not-exists
     image: golang
     commands:
       - go version
