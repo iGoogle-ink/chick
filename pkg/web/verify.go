@@ -14,8 +14,8 @@ func Verify(c *gin.Context) {
 	h := req.Header
 
 	sappkey := h.Get("appkey")
-	if _, ok := mKey[sappkey]; ok { // only allowed keys can access
-		return
+	if _, ok := mKey[sappkey]; !ok { // only allowed keys can access
+		c.Abort()
+		log.Warn("IllegalKey! %s", sappkey)
 	}
-	log.Warn("IllegalKey! %s", sappkey)
 }
